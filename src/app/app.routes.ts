@@ -116,18 +116,24 @@ export const routes: Routes = [
     pathMatch: 'full',
     redirectTo: 'admin/dashboard',
   },
-  featureRoute({
+  {
     path: 'admin/dashboard',
     title: 'Admin Dashboard',
+    loadComponent: () =>
+    import('./features/admin/dashboard/dashboard.component')
+      .then(m => m.DashboardComponent)
     // roles: [APP_ROLES.admin],
-    componentPath: 'features/admin/dashboard/dashboard.component',
-  }),
-  featureRoute({
+    // componentPath: 'features/admin/dashboard/dashboard.component',
+  },
+  {
     path: 'admin/operations',
     title: 'Operations',
+    loadComponent: () =>
+    import('./features/admin/operations/operations.component')
+      .then(m => m.OperationsComponent)
     // roles: [APP_ROLES.admin],
-    componentPath: 'features/admin/operations/operations.component',
-  }),
+    // componentPath: 'features/admin/operations/operations.component',
+  },
   {
     path: '**',
     redirectTo: 'menu',
