@@ -67,10 +67,13 @@
         </div>
       </section>
 
-      <section *ngIf="order.qrToken" class="section-card qr-token-card">
-        <div class="section-title-row">
-          <span class="material-symbols-outlined">qr_code_2</span>
-          <h2>Pickup Token</h2>
+      <!-- QR Code Section -->
+      <div *ngIf="order.qrToken" class="section qr-section">
+        <h2 class="section-title">📲 Pickup QR Code</h2>
+        <div class="qr-content">
+          <p class="qr-description">Show this QR code at pickup</p>
+          <!-- <div class="qr-token">{{ order.qrToken }}</div> -->
+           <div class="qr-token"><order-qr-display [orderId]="order.orderId" /></div>
         </div>
         <code>{{ order.qrToken }}</code>
         <a class="timeout-btn" [routerLink]="['/pickup/qr', order.orderId]">View Pickup QR</a>
