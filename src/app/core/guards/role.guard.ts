@@ -1,12 +1,18 @@
-import { CanActivateFn } from '@angular/router';
+import { inject } from '@angular/core';
+import { CanActivateFn, Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
-export type AppRole = 'EMPLOYEE' | 'COUNTER' | 'ADMIN';
+export const roleGuard: CanActivateFn = (route) => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
 
-export const APP_ROLES = {
-  employee: 'EMPLOYEE',
-  counter: 'COUNTER',
-  admin: 'ADMIN',
-} as const;
+  const allowedRoles: string[] = route.data?.['roles'] ?? [];
+  const userRole = authService.getRole();
 
-// Pass-through until the auth feature reads the JWT role claim.
-export const roleGuard: CanActivateFn = () => true;
+  if (userRole && allowedRoles.includes(userRole)) {
+    return true;
+  }
+
+  router.navigate(['/login']);
+  return false;
+};
