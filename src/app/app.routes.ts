@@ -1,6 +1,11 @@
 import { Component } from '@angular/core';
 import { Route, Routes } from '@angular/router';
 
+// Cart-Order Components
+import { CheckoutComponent } from './features/cart-order/checkout/checkout.component';
+import { OrderHistoryComponent } from './features/cart-order/order-history/order-history.component';
+import { OrderDetailComponent } from './features/cart-order/order-history/order-detail/order-detail.component';
+
 // import { APP_ROLES, AppRole, roleGuard } from './core/guards/role.guard';
 // import { authGuard } from './core/guards/auth.guard';
 
@@ -65,18 +70,21 @@ export const routes: Routes = [
     // roles: [APP_ROLES.employee],
     componentPath: 'features/cart-order/cart/cart.component',
   }),
-  featureRoute({
+  {
     path: 'checkout',
     title: 'Checkout',
-    // roles: [APP_ROLES.employee],
-    componentPath: 'features/cart-order/checkout/checkout.component',
-  }),
-  featureRoute({
+    component: CheckoutComponent,
+  },
+  {
     path: 'orders',
     title: 'Order History',
-    // roles: [APP_ROLES.employee],
-    componentPath: 'features/cart-order/order-history/order-history.component',
-  }),
+    component: OrderHistoryComponent,
+  },
+  {
+    path: 'orders/:orderId',
+    title: 'Order Detail',
+    component: OrderDetailComponent,
+  },
   featureRoute({
     path: 'wallet',
     title: 'Wallet',
