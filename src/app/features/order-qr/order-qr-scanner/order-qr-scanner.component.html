@@ -1,18 +1,33 @@
-<div class="qr-scanner">
+<section class="scanner-page">
+  <article class="scanner-card">
+    <header class="scanner-header">
+      <p class="eyebrow">Counter scanner</p>
+      <h1>Scan pickup QR</h1>
+      <p>Validate an employee pickup code using the device camera.</p>
+    </header>
 
-  <button (click)="startScanner()" [disabled]="scanning">
-    {{ scanning ? 'Scanning...' : 'Scan QR Code' }}
-  </button>
+    <div class="scanner-actions">
+      <button class="btn btn-primary" (click)="startScanner()" [disabled]="scanning" type="button">
+        <span class="material-symbols-outlined">{{ scanning ? 'sync' : 'qr_code_scanner' }}</span>
+        {{ scanning ? 'Scanning...' : 'Start Scanner' }}
+      </button>
 
-  <button (click)="stopCamera()" *ngIf="scanning">
-    Cancel
-  </button>
+      <button class="btn btn-secondary" (click)="stopCamera()" *ngIf="scanning" type="button">
+        <span class="material-symbols-outlined">close</span>
+        Cancel
+      </button>
+    </div>
 
-  <video #video autoplay playsinline [hidden]="!scanning"></video>
-  
-<canvas #canvas style="width:300px; height:300px;"></canvas>
+    <div class="camera-frame" [class.is-active]="scanning">
+      <video #video autoplay playsinline [hidden]="!scanning"></video>
+      <canvas #canvas [hidden]="!scanning"></canvas>
+      <div class="camera-placeholder" *ngIf="!scanning">
+        <span class="material-symbols-outlined">qr_code_scanner</span>
+        <p>Camera preview will appear here</p>
+      </div>
+    </div>
 
-  <p class="result" *ngIf="result" >Decoded: {{ result }}</p>
-  <p class="error" *ngIf="error">{{ error }}</p>
-
-</div>
+    <p class="result" *ngIf="result">Decoded: {{ result }}</p>
+    <p class="error" *ngIf="error">{{ error }}</p>
+  </article>
+</section>

@@ -67,15 +67,15 @@ export class DashboardComponent implements OnInit {
   };
 
   private colors = [
-    '#f59e0b','#3b82f6','#10b981','#8b5cf6',
-    '#ef4444','#06b6d4','#f97316','#84cc16'
+    '#f97316', '#9d4300', '#006398', '#565e74',
+    '#ffb690', '#00a2f4', '#783200', '#8c7164'
   ];
 
   private statusColors: Record<string, string> = {
     COLLECTED:        '#10b981',
-    READY_FOR_PICKUP: '#3b82f6',
-    VENDOR_ACCEPTED:  '#6366f1',
-    PENDING_VENDOR:   '#f59e0b',
+    READY_FOR_PICKUP: '#006398',
+    VENDOR_ACCEPTED:  '#9d4300',
+    PENDING_VENDOR:   '#f97316',
     VENDOR_DECLINED:  '#ef4444',
     CANCELLED:        '#94a3b8'
   };
@@ -156,10 +156,10 @@ export class DashboardComponent implements OnInit {
       labels: [...revenue.map(p => p.date)],
       datasets: [{
         data: [...revenue.map(p => p.revenue)],
-        borderColor: '#f59e0b',
-        backgroundColor: 'rgba(245,158,11,0.1)',
+        borderColor: '#f97316',
+        backgroundColor: 'rgba(249,115,22,0.12)',
         borderWidth: 2,
-        pointBackgroundColor: '#f59e0b',
+        pointBackgroundColor: '#f97316',
         pointRadius: 4,
         fill: true,
         tension: 0.4

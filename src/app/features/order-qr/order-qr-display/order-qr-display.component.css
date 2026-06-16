@@ -1,0 +1,122 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.qr-page {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  padding: 24px 16px;
+}
+
+.qr-card {
+  width: min(480px, 100%);
+  min-width: 0;
+  padding: 28px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: var(--shadow-md);
+  animation: fadeUp 360ms ease both;
+}
+
+.qr-header {
+  margin-bottom: 22px;
+  text-align: center;
+}
+
+.qr-badge {
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 14px;
+  border-radius: var(--radius);
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-size: 38px;
+}
+
+.qr-card:hover .qr-badge {
+  transform: rotate(-5deg) scale(1.06);
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: var(--primary);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.qr-header h1 {
+  margin: 0;
+  color: var(--text);
+  font-size: clamp(28px, 7vw, 34px);
+}
+
+.qr-header p {
+  margin: 10px auto 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.qr-frame {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  min-width: 0;
+  padding: 22px;
+  border: 1px dashed rgba(157, 67, 0, 0.32);
+  border-radius: var(--radius);
+  background:
+    linear-gradient(135deg, rgba(255, 234, 224, 0.5), rgba(255, 219, 202, 0.5)),
+    #fff;
+}
+
+.qr-frame img {
+  width: min(100%, 320px);
+  height: auto;
+  border-radius: var(--radius);
+  background: #fff;
+  box-shadow: var(--shadow-sm);
+}
+
+.qr-loading {
+  gap: 12px;
+  color: var(--muted);
+  font-weight: 800;
+  text-align: center;
+}
+
+.spinner {
+  width: 44px;
+  height: 44px;
+  border: 4px solid var(--line);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 800ms linear infinite;
+}
+
+@media (max-width: 420px) {
+  .qr-page {
+    align-items: start;
+    padding: 18px 12px 84px;
+  }
+
+  .qr-card {
+    padding: 18px;
+  }
+
+  .qr-badge {
+    width: 58px;
+    height: 58px;
+    font-size: 30px;
+  }
+
+  .qr-frame {
+    padding: 14px;
+  }
+}

@@ -1,3 +1,21 @@
-<div>
-    <img [src]="`data:image/png;base64,${base64QRString}`" alt="OrderQR">
-</div>
+<section class="qr-page">
+  <article class="qr-card">
+    <div class="qr-header">
+      <span class="qr-badge material-symbols-outlined">qr_code_2</span>
+      <p class="eyebrow">Pickup QR</p>
+      <h1>Order #{{ orderId }}</h1>
+      <p>Show this code at the cafeteria counter for a faster pickup handoff.</p>
+    </div>
+
+    <div class="qr-frame" *ngIf="base64QRString; else loadingQr">
+      <img [src]="'data:image/png;base64,' + base64QRString" alt="Order QR code" />
+    </div>
+
+    <ng-template #loadingQr>
+      <div class="qr-frame qr-loading">
+        <div class="spinner"></div>
+        <span>Preparing QR code...</span>
+      </div>
+    </ng-template>
+  </article>
+</section>

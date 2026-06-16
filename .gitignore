@@ -4,3 +4,4 @@ dist/
 .npm-cache/
 .idea/
 .vscode/
+ng-serve-*.log

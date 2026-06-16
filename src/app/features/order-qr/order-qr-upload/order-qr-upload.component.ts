@@ -18,6 +18,8 @@ export class OrderQRUploadComponent {
 
     selectedFile: File | null = null;
     isUploading: boolean = false;
+    successMessage: string = '';
+    errorMessage: string = '';
 
     constructor(
         private orderQRService: OrderQRService
@@ -35,6 +37,9 @@ export class OrderQRUploadComponent {
             return;
         }
 
+        this.successMessage = '';
+        this.errorMessage = '';
+
         const formData = new FormData();
         formData.append("qr", this.selectedFile, this.selectedFile.name);
 
@@ -42,11 +47,11 @@ export class OrderQRUploadComponent {
 
         this.orderQRService.uploadQR(formData).subscribe({
             next: (response) => {
-                console.log(response)
+                this.successMessage = response.message || 'QR validated successfully.';
                 this.uploadCompleted.emit(response);
             },
             error: (err) => {
-                console.error(`Upload failed: ${err.message || err}`);
+                this.errorMessage = err?.error?.message || 'Upload failed. Please try another image.';
             },
             complete: () => {
                 this.isUploading = false;

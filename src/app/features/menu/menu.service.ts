@@ -14,47 +14,37 @@ export class MenuService {
 
   // ---- employee browse ----
   getTodaysMenu(): Observable<MenuItem[]> {
-    const headers = { Authorization: `Bearer ${localStorage.getItem('auth_token')}` };
-    return this.http.get<MenuItem[]>(`${this.baseUrl}/today`, { headers });
+    return this.http.get<MenuItem[]>(`${this.baseUrl}/today`);
   }
   search(name: string): Observable<MenuItem[]> {
-    const headers = { Authorization: `Bearer ${localStorage.getItem('auth_token')}` };
-    return this.http.get<MenuItem[]>(`${this.baseUrl}/search`, { params: { name }, headers });
+    return this.http.get<MenuItem[]>(`${this.baseUrl}/search`, { params: { name } });
   }
   filterByFoodType(type: string): Observable<MenuItem[]> {
-    const headers = { Authorization: `Bearer ${localStorage.getItem('auth_token')}` };
-    return this.http.get<MenuItem[]>(`${this.baseUrl}/filter`, { params: { type }, headers });
+    return this.http.get<MenuItem[]>(`${this.baseUrl}/filter`, { params: { type } });
   }
 
   // ---- staff management (used by the manage screen next) ----
   getAll(): Observable<MenuItem[]> {
-    const headers = { Authorization: `Bearer ${localStorage.getItem('auth_token')}` };
-    return this.http.get<MenuItem[]>(this.baseUrl, { headers });
+    return this.http.get<MenuItem[]>(this.baseUrl);
   }
   create(request: MenuItemRequest): Observable<MenuItem> {
-    const headers = { Authorization: `Bearer ${localStorage.getItem('auth_token')}` };
-    return this.http.post<MenuItem>(this.baseUrl, request, { headers });
+    return this.http.post<MenuItem>(this.baseUrl, request);
   }
   update(id: number, request: MenuItemRequest): Observable<MenuItem> {
-    const headers = { Authorization: `Bearer ${localStorage.getItem('auth_token')}` };
-    return this.http.put<MenuItem>(`${this.baseUrl}/${id}`, request, { headers });
+    return this.http.put<MenuItem>(`${this.baseUrl}/${id}`, request);
   }
   delete(id: number): Observable<void> {
-    const headers = { Authorization: `Bearer ${localStorage.getItem('auth_token')}` };
-    return this.http.delete<void>(`${this.baseUrl}/${id}`, { headers });
+    return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
   setStock(id: number, stock: number): Observable<MenuItem> {
-    const headers = { Authorization: `Bearer ${localStorage.getItem('auth_token')}` };
-    return this.http.patch<MenuItem>(`${this.baseUrl}/${id}/stock`, null, { params: { stock }, headers });
+    return this.http.patch<MenuItem>(`${this.baseUrl}/${id}/stock`, null, { params: { stock } });
   }
   setAvailability(id: number, available: boolean): Observable<MenuItem> {
-    const headers = { Authorization: `Bearer ${localStorage.getItem('auth_token')}` };
-    return this.http.patch<MenuItem>(`${this.baseUrl}/${id}/availability`, null, { params: { available }, headers });
+    return this.http.patch<MenuItem>(`${this.baseUrl}/${id}/availability`, null, { params: { available } });
   }
 
   // ---- vendors (for the manage form's dropdown) ----
   getVendors(): Observable<Vendor[]> {
-    const headers = { Authorization: `Bearer ${localStorage.getItem('auth_token')}` };
-    return this.http.get<Vendor[]>(`${this.vendorUrl}/active`, { headers });
+    return this.http.get<Vendor[]>(`${this.vendorUrl}/active`);
   }
 }

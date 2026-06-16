@@ -1,95 +1,172 @@
-<div class="checkout-wrapper">
-  <div class="checkout-container">
-    <!-- Header -->
-    <div class="checkout-header">
-      <h1>🛒 Checkout</h1>
-      <p class="subtitle">Review your order and select a pickup time</p>
+<main class="checkout-page">
+  <header class="app-topbar">
+    <div class="topbar-left">
+      <button class="icon-btn" routerLink="/cart" type="button" aria-label="Back">
+        <span class="material-symbols-outlined">arrow_back</span>
+      </button>
+      <h1>Checkout</h1>
     </div>
+    <div class="wallet-pill">
+      <span class="material-symbols-outlined">account_balance_wallet</span>
+      <span>$42.50</span>
+    </div>
+  </header>
 
-    <!-- Error Alert -->
+  <section class="checkout-shell">
     <div *ngIf="errorMessage" class="alert alert-error">
-      <span class="alert-icon">⚠️</span>
+      <span class="material-symbols-outlined">error</span>
       <span>{{ errorMessage }}</span>
     </div>
 
-    <!-- Main Content Grid -->
-    <div class="checkout-content">
-      <!-- Left: Order Items -->
-      <div class="section items-section">
-        <h2 class="section-title">📋 Order Items</h2>
+    <div class="checkout-layout">
+      <section class="section-card cart-card">
+        <div class="cart-heading">
+          <div>
+            <p class="eyebrow">Shopping cart</p>
+            <h2>Your order</h2>
+          </div>
+          <a routerLink="/cart">Edit Items</a>
+        </div>
 
         <div *ngIf="cartItems.length === 0" class="empty-message">
-          Your cart is empty. <a routerLink="/menu" class="link">Continue shopping →</a>
+          <span class="material-symbols-outlined">shopping_cart_off</span>
+          <strong>Your cart is empty.</strong>
+          <a routerLink="/menu">Continue shopping</a>
         </div>
 
-        <div *ngIf="cartItems.length > 0" class="items-container">
-          <div *ngFor="let item of cartItems" class="item-row">
-            <div class="item-details">
-              <div class="item-id">Item #{{ item.menuItemId }}</div>
-              <div class="item-qty">Quantity: {{ item.quantity }}</div>
+        <ng-container *ngIf="cartItems.length > 0">
+          <div class="cart-table-head">
+            <span>Product</span>
+            <span>Price</span>
+            <span>Quantity</span>
+            <span>Total</span>
+          </div>
+
+          <div class="checkout-items">
+            <article *ngFor="let item of cartItems" class="checkout-item">
+              <div class="item-product">
+                <div class="item-image">
+                  <span>{{ item.menuItemId }}</span>
+                </div>
+                <div class="item-copy">
+                  <h3>Menu item {{ item.menuItemId }}</h3>
+                  <p>Fresh cafeteria selection</p>
+                </div>
+              </div>
+
+              <span class="item-price">$50.00</span>
+
+              <div class="quantity-pill" aria-label="Quantity">
+                <span class="material-symbols-outlined">remove</span>
+                <strong>{{ item.quantity }}</strong>
+                <span class="material-symbols-outlined">add</span>
+              </div>
+
+              <strong class="line-total">${{ (item.quantity * 50) | number: '1.2-2' }}</strong>
+            </article>
+          </div>
+
+          <div class="cart-footer">
+            <a routerLink="/menu" class="continue-link">
+              <span class="material-symbols-outlined">arrow_back</span>
+              Continue shopping
+            </a>
+            <div class="cart-subtotal">
+              <span>Cart subtotal</span>
+              <strong>${{ totalAmount | number: '1.2-2' }}</strong>
             </div>
-            <div class="item-price">${{ (item.quantity * 50) | number: '1.2-2' }}</div>
           </div>
-        </div>
-      </div>
+        </ng-container>
+      </section>
 
-      <!-- Right: Summary & Pickup -->
-      <div class="section summary-section">
-        <!-- Order Summary -->
-        <div class="summary-box">
-          <h2 class="section-title">💰 Order Summary</h2>
-          <div class="summary-row">
-            <span class="label">Subtotal:</span>
-            <span class="value">${{ (totalAmount * 0.9) | number: '1.2-2' }}</span>
+      <aside class="checkout-panel" aria-label="Checkout details">
+        <section class="section-card pickup-card">
+          <div class="section-title-row">
+            <span class="material-symbols-outlined">schedule</span>
+            <h2>Pickup Slot</h2>
           </div>
-          <div class="summary-row">
-            <span class="label">Tax (10%):</span>
-            <span class="value">${{ (totalAmount * 0.1) | number: '1.2-2' }}</span>
-          </div>
-          <div class="summary-row total">
-            <span class="label">Total:</span>
-            <span class="value">${{ totalAmount | number: '1.2-2' }}</span>
-          </div>
-        </div>
+          <p>Select your preferred window for fresh pickup.</p>
 
-        <!-- Pickup Time Selection -->
-        <div class="pickup-box">
-          <h2 class="section-title">⏰ Pickup Time</h2>
-          <select [(ngModel)]="selectedPickupSlot" class="time-select">
-            <option value="">-- Select a time --</option>
-            <option *ngFor="let slot of pickupSlots" [value]="slot">
-              {{ slot }}
-            </option>
-          </select>
-
-          <div *ngIf="selectedPickupSlot" class="time-selected">
-            <span class="check-icon">✓</span>
-            <span>Pickup at {{ selectedPickupSlot }}</span>
+          <div class="slot-grid">
+            <button
+              *ngFor="let slot of pickupSlots"
+              class="time-slot"
+              [class.selected]="selectedPickupSlot === slot"
+              (click)="selectedPickupSlot = slot"
+              type="button"
+            >
+              <strong>{{ slot }}</strong>
+              <span>{{ slot === pickupSlots[0] ? 'Fastest' : 'Available' }}</span>
+            </button>
           </div>
-        </div>
-      </div>
+        </section>
+
+        <section class="section-card payment-card">
+          <div class="section-title-row">
+            <span class="material-symbols-outlined">payments</span>
+            <h2>Payment Info</h2>
+          </div>
+          <div class="wallet-option">
+            <div class="wallet-icon">
+              <span class="material-symbols-outlined">account_balance_wallet</span>
+            </div>
+            <div>
+              <strong>Cafetron Wallet</strong>
+              <span>Balance: $42.50</span>
+            </div>
+            <span class="material-symbols-outlined check">check_circle</span>
+          </div>
+          <button class="outline-btn" type="button">Add Payment Method</button>
+        </section>
+
+        <section class="section-card totals-card">
+          <div class="section-title-row">
+            <span class="material-symbols-outlined">receipt_long</span>
+            <h2>Order Total</h2>
+          </div>
+          <div class="total-row">
+            <span>Subtotal</span>
+            <span>${{ (totalAmount * 0.9) | number: '1.2-2' }}</span>
+          </div>
+          <div class="total-row">
+            <span>Tax</span>
+            <span>${{ (totalAmount * 0.1) | number: '1.2-2' }}</span>
+          </div>
+          <div class="total-row">
+            <span>Convenience Fee</span>
+            <span>$0.50</span>
+          </div>
+          <div class="total-row grand">
+            <span>Total</span>
+            <strong>${{ (totalAmount + 0.5) | number: '1.2-2' }}</strong>
+          </div>
+
+          <button
+            class="place-btn"
+            (click)="onPlaceOrder()"
+            [disabled]="isLoading || cartItems.length === 0"
+            type="button"
+          >
+            <span>{{ isLoading ? 'Placing Order...' : 'Place Order' }}</span>
+            <span class="material-symbols-outlined">arrow_forward</span>
+          </button>
+          <p class="terms">By placing your order, you agree to Cafetron's Terms of Service.</p>
+        </section>
+      </aside>
     </div>
+  </section>
 
-    <!-- Action Buttons -->
-    <div class="actions-footer">
-      <button
-        class="btn btn-secondary"
-        routerLink="/menu"
-        type="button"
-      >
-        ← Continue Shopping
-      </button>
-      <button
-        class="btn btn-primary"
-        (click)="onPlaceOrder()"
-        [disabled]="isLoading || cartItems.length === 0"
-        type="button"
-      >
-        <span *ngIf="!isLoading; else loading">Place Order</span>
-        <ng-template #loading>
-          <span>⏳ Placing Order...</span>
-        </ng-template>
-      </button>
+  <div class="mobile-action-bar">
+    <div>
+      <span>Total Amount</span>
+      <strong>${{ (totalAmount + 0.5) | number: '1.2-2' }}</strong>
     </div>
+    <button
+      (click)="onPlaceOrder()"
+      [disabled]="isLoading || cartItems.length === 0"
+      type="button"
+    >
+      {{ isLoading ? 'Placing...' : 'Place Order' }}
+    </button>
   </div>
-</div>
+</main>

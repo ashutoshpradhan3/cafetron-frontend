@@ -10,7 +10,7 @@ import { LoginRequest } from '../../../models/auth.models';
   standalone: true,
   imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './login.html',
-  styleUrl: './login.scss'
+  styleUrl: './login.css'
 })
 export class LoginComponent {
 

@@ -10,7 +10,7 @@ import { RegisterRequest } from '../../../models/auth.models';
   standalone: true,
   imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './register.html',
-  styleUrl: './register.scss'
+  styleUrl: './register.css'
 })
 export class RegisterComponent {
 

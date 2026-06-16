@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, Input, OnInit, numberAttribute } from "@angular/core";
 import { OrderQRService } from "../order-qr.service";
 import { CommonModule } from "@angular/common";
 
@@ -11,7 +11,7 @@ import { CommonModule } from "@angular/common";
 })
 export class OrderQRDisplayComponent implements OnInit {
 
-    @Input({ required: true })
+    @Input({ required: true, transform: numberAttribute })
     orderId: number = 0;
     
     base64QRString: string = '';
@@ -22,6 +22,11 @@ export class OrderQRDisplayComponent implements OnInit {
     ){}
 
     ngOnInit(): void {
+        if (!this.orderId || this.orderId <= 0) {
+            console.error('Invalid orderId provided for QR display');
+            return;
+        }
+
         this.orderQRService.getQR(this.orderId).subscribe({
             next: (result) => {
 

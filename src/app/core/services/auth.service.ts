@@ -14,7 +14,8 @@ import {
 export class AuthService {
 
   private readonly API = 'http://localhost:8081/api';
-  private readonly TOKEN_KEY = 'cafetron_token';
+  private readonly TOKEN_KEY = 'jwt_token';
+  private readonly LEGACY_TOKEN_KEYS = ['cafetron_token', 'auth_token'];
   private readonly USER_KEY = 'cafetron_user';
 
   constructor(private http: HttpClient) {}
@@ -45,16 +46,32 @@ export class AuthService {
 
   private saveSession(response: AuthResponse): void {
     localStorage.setItem(this.TOKEN_KEY, response.token);
+    this.LEGACY_TOKEN_KEYS.forEach((key) => localStorage.removeItem(key));
     localStorage.setItem(this.USER_KEY, JSON.stringify(response));
   }
 
   logout(): void {
     localStorage.removeItem(this.TOKEN_KEY);
+    this.LEGACY_TOKEN_KEYS.forEach((key) => localStorage.removeItem(key));
     localStorage.removeItem(this.USER_KEY);
   }
 
   getToken(): string | null {
-    return localStorage.getItem(this.TOKEN_KEY);
+    const primary = localStorage.getItem(this.TOKEN_KEY);
+    if (primary) {
+      return primary;
+    }
+
+    for (const key of this.LEGACY_TOKEN_KEYS) {
+      const legacy = localStorage.getItem(key);
+      if (legacy) {
+        localStorage.setItem(this.TOKEN_KEY, legacy);
+        localStorage.removeItem(key);
+        return legacy;
+      }
+    }
+
+    return null;
   }
 
   isLoggedIn(): boolean {

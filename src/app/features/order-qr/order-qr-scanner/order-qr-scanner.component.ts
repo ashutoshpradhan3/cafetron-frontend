@@ -91,7 +91,7 @@ export class OrderQrScannerComponent implements OnDestroy {
         
             this.orderQRService.uploadQR(form).subscribe({
             next: response => {
-                console.log(response);
+                this.result = response.message || (response.isValid ? 'QR validated successfully.' : 'QR is invalid.');
                 this.scanningCompleted.emit(response);
                 this.scanning = false;
                 this.cdr.detectChanges();
