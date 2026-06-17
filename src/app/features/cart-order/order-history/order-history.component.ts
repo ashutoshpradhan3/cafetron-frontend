@@ -6,6 +6,7 @@ import { finalize, takeUntil, timeout } from 'rxjs/operators';
 
 import { OrderApiService } from '../services/order-api.service';
 import { MyOrderSummaryResponse } from '../models/order.models';
+import { WalletService } from '../../wallet/wallet.service';
 
 @Component({
   selector: 'order-history',
@@ -17,17 +18,52 @@ import { MyOrderSummaryResponse } from '../models/order.models';
 export class OrderHistoryComponent implements OnInit, OnDestroy {
   orders: MyOrderSummaryResponse[] = [];
   isLoading = true;
+  walletBalance: number | null = null;
+  isWalletLoading = false;
   errorMessage = '';
   private destroy$ = new Subject<void>();
 
   constructor(
     private orderApi: OrderApiService,
+    private walletService: WalletService,
     private router: Router,
     private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.loadOrders();
+    this.loadWalletBalance();
+  }
+
+  private loadWalletBalance(): void {
+    this.isWalletLoading = true;
+
+    this.walletService
+      .getWallet()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (wallet) => {
+          this.walletBalance = wallet.balance;
+          this.isWalletLoading = false;
+          this.cdr.detectChanges();
+        },
+        error: (error) => {
+          console.error('Failed to load wallet:', error);
+          this.walletBalance = null;
+          this.isWalletLoading = false;
+          this.cdr.detectChanges();
+        },
+      });
+  }
+
+  getWalletLabel(): string {
+    if (this.isWalletLoading) {
+      return 'Loading...';
+    }
+
+    return this.walletBalance === null
+      ? 'Unavailable'
+      : `$${this.walletBalance.toFixed(2)}`;
   }
 
   private loadOrders(): void {

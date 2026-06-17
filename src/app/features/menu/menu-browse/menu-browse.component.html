@@ -1,48 +1,79 @@
-<div class="menu-browse-wrapper">
+<main class="menu-browse-wrapper">
   <div class="menu-browse-container">
-    <!-- Header -->
-    <div class="page-header">
-      <h1>🍽️ Today's Menu</h1>
-      <p class="subtitle">Browse and add items to your cart</p>
-    </div>
+    <section class="page-header">
+      <div>
+        <p class="eyebrow">Cafetron Market</p>
+        <h1>Today's Menu</h1>
+        <p class="subtitle">Browse fresh cafeteria picks and add them to your cart.</p>
+      </div>
+      <div class="header-actions">
+        <button class="cart-preview-btn" type="button" (click)="openCart()" aria-label="Open cart">
+          <span class="material-symbols-outlined">shopping_cart</span>
+          <span>Cart</span>
+          <strong>{{ cartItemCount }}</strong>
+        </button>
+        <a class="manage-link" routerLink="/profile">
+          <span class="material-symbols-outlined">account_circle</span>
+          {{ userName }}
+        </a>
+        <a class="manage-link" routerLink="/menu/manage">
+          <span class="material-symbols-outlined">tune</span>
+          Manage
+        </a>
+        <button class="logout-btn" type="button" (click)="logout()">
+          <span class="material-symbols-outlined">logout</span>
+          Logout
+        </button>
+      </div>
+      <svg viewBox="0 0 360 160" aria-hidden="true">
+        <path d="M26 118c52-48 113-68 183-60 49 6 89 28 124 65" />
+        <path d="M85 84c-10-31 27-36 14-66M167 76c-10-28 24-34 11-58M247 85c-8-27 26-31 13-58" />
+      </svg>
+    </section>
 
-    <!-- Error Alert -->
     <div *ngIf="errorMessage" class="alert alert-error">
-      <span class="alert-icon">⚠️</span>
+      <span class="material-symbols-outlined">error</span>
       <span>{{ errorMessage }}</span>
     </div>
 
-    <!-- Loading State -->
+    <div *ngIf="cartMessage" class="alert alert-success">
+      <span class="material-symbols-outlined">shopping_cart</span>
+      <span>{{ cartMessage }}</span>
+    </div>
+
     <div *ngIf="isLoading" class="loading-state">
       <div class="spinner"></div>
       <p>Loading menu items...</p>
     </div>
 
-    <!-- Search Bar (shown when not loading) -->
-    <div *ngIf="!isLoading" class="search-section">
-      <input
-        type="text"
-        class="search-input"
-        placeholder="🔍 Search dishes..."
-        (input)="onSearch($event)"
-      />
-    </div>
+    <section *ngIf="!isLoading" class="controls-card">
+      <div class="search-section">
+        <span class="material-symbols-outlined">search</span>
+        <input
+          type="text"
+          class="search-input"
+          placeholder="Search dishes..."
+          (input)="onSearch($event)"
+        />
+      </div>
 
-    <!-- Filter Buttons (shown when not loading) -->
-    <div *ngIf="!isLoading" class="filters">
-      <button
-        *ngFor="let filter of ['ALL', 'VEG', 'NON_VEG', 'VEGAN', 'JAIN']"
-        [class.active]="activeFilter === filter"
-        class="filter-btn"
-        (click)="applyFilter(filter)"
-      >
-        {{ filter === 'ALL' ? 'All' : filter.replace('_', ' ') }}
-      </button>
-    </div>
+      <div class="filters">
+        <button
+          *ngFor="let filter of ['ALL', 'VEG', 'NON_VEG', 'VEGAN', 'JAIN']"
+          [class.active]="activeFilter === filter"
+          class="filter-btn"
+          (click)="applyFilter(filter)"
+        >
+          {{ filter === 'ALL' ? 'All' : filter.replace('_', ' ') }}
+        </button>
+      </div>
+    </section>
 
-    <!-- Menu Items Grid -->
-    <div *ngIf="!isLoading && items.length > 0" class="items-grid">
-      <div *ngFor="let item of items; trackBy: trackByItemId" class="menu-card">
+    <section *ngIf="!isLoading && items.length > 0" class="items-grid">
+      <article *ngFor="let item of items; trackBy: trackByItemId" class="menu-card">
+        <div class="item-mark">
+          <span class="material-symbols-outlined">restaurant</span>
+        </div>
         <div class="card-header">
           <h3>{{ item.itemName }}</h3>
         </div>
@@ -57,16 +88,85 @@
 
         <div class="card-footer">
           <div class="price">₹{{ item.price | number: '1.2-2' }}</div>
-          <button class="btn-add">Add to Cart →</button>
+          <button
+            type="button"
+            (click)="addToCart(item)"
+            class="btn-add"
+            [disabled]="!item.isAvailable || item.stock <= 0"
+          >
+            <span>{{ !item.isAvailable ? 'Unavailable' : item.stock <= 0 ? 'Out of stock' : 'Add' }}</span>
+            <span class="material-symbols-outlined">add_shopping_cart</span>
+          </button>
         </div>
-      </div>
-    </div>
+      </article>
+    </section>
 
-    <!-- Empty State -->
-    <div *ngIf="!isLoading && items.length === 0 && !errorMessage" class="empty-state">
-      <div class="empty-icon">🍽️</div>
+    <section *ngIf="!isLoading && items.length === 0 && !errorMessage" class="empty-state">
+      <div class="empty-icon">
+        <span class="material-symbols-outlined">restaurant_menu</span>
+      </div>
       <h2>No Items Available</h2>
       <p>No menu items match your search or filter. Try adjusting your criteria.</p>
-    </div>
+    </section>
   </div>
-</div>
+
+  <button class="floating-cart" type="button" (click)="openCart()" *ngIf="cartItemCount > 0">
+    <span class="material-symbols-outlined">shopping_cart</span>
+    <span>{{ cartItemCount }} item{{ cartItemCount === 1 ? '' : 's' }}</span>
+    <strong>₹{{ cartTotal | number: '1.2-2' }}</strong>
+  </button>
+
+  <section class="cart-backdrop" *ngIf="isCartOpen" (click)="closeCart()">
+    <aside class="cart-drawer" (click)="$event.stopPropagation()">
+      <header class="cart-drawer-header">
+        <div>
+          <p class="eyebrow">Your cart</p>
+          <h2>{{ cartItemCount }} item{{ cartItemCount === 1 ? '' : 's' }}</h2>
+        </div>
+        <button class="icon-close" type="button" (click)="closeCart()" aria-label="Close cart">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </header>
+
+      <div *ngIf="cartItems.length === 0" class="cart-empty">
+        <span class="material-symbols-outlined">shopping_cart_off</span>
+        <strong>Your cart is empty</strong>
+        <p>Add something from the menu to start checkout.</p>
+      </div>
+
+      <div *ngIf="cartItems.length > 0" class="cart-list">
+        <article *ngFor="let item of cartItems" class="cart-row">
+          <div class="cart-item-mark">{{ item.itemName.charAt(0) }}</div>
+          <div class="cart-item-copy">
+            <h3>{{ item.itemName }}</h3>
+            <p>{{ item.vendorName || item.foodType || 'Cafetron item' }}</p>
+            <strong>₹{{ item.price | number: '1.2-2' }}</strong>
+          </div>
+          <div class="cart-qty">
+            <button type="button" (click)="decreaseQuantity(item)" aria-label="Decrease quantity">
+              <span class="material-symbols-outlined">remove</span>
+            </button>
+            <span>{{ item.quantity }}</span>
+            <button type="button" (click)="increaseQuantity(item)" aria-label="Increase quantity">
+              <span class="material-symbols-outlined">add</span>
+            </button>
+          </div>
+          <button class="remove-cart-item" type="button" (click)="removeFromCart(item)" aria-label="Remove item">
+            <span class="material-symbols-outlined">delete</span>
+          </button>
+        </article>
+      </div>
+
+      <footer class="cart-drawer-footer">
+        <div class="cart-total-row">
+          <span>Total</span>
+          <strong>₹{{ cartTotal | number: '1.2-2' }}</strong>
+        </div>
+        <button class="checkout-btn" type="button" (click)="goToCheckout()" [disabled]="cartItemCount === 0">
+          <span>Checkout</span>
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </button>
+      </footer>
+    </aside>
+  </section>
+</main>

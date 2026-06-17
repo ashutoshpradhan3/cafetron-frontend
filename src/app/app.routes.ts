@@ -12,10 +12,13 @@ import { MenuManageComponent } from './features/menu/menu-manage/menu-manage.com
 import { OrderQRDisplayComponent } from './features/order-qr/order-qr-display/order-qr-display.component';
 import { OrderQrScannerComponent } from './features/order-qr/order-qr-scanner/order-qr-scanner.component';
 import { OrderQRUploadComponent } from './features/order-qr/order-qr-upload/order-qr-upload.component';
+import { WalletComponent } from './features/wallet/wallet.component';
 
 // Vendor Management Components
 import { VendorManageComponent } from './features/vendor/vendor-manage/vendor-manage.component';
 import { authGuard } from './core/guards/auth.guard';
+import { roleGuard } from './core/guards/role.guard';
+import { APP_ROLES } from './models/auth.models';
 
 // import { APP_ROLES, AppRole, roleGuard } from './core/guards/role.guard';
 // import { authGuard } from './core/guards/auth.guard';
@@ -86,21 +89,31 @@ type FeatureRouteOptions = {
   path: string;
   title: string;
   componentPath: string;
+  roles?: string[];
 };
 
 const featureRoute = ({
   path,
   title,
   componentPath,
+  roles,
 }: FeatureRouteOptions): Route => ({
   path,
   title,
-  canActivate: [authGuard],
+  canActivate: roles?.length ? [authGuard, roleGuard] : [authGuard],
   component: PendingFeatureRouteComponent,
   data: {
     componentPath,
+    roles,
   },
 });
+
+const MENU_ROLES = [APP_ROLES.admin, APP_ROLES.employee, APP_ROLES.vendor];
+const EMPLOYEE_ORDER_ROLES = [APP_ROLES.admin, APP_ROLES.employee];
+const MENU_MANAGE_ROLES = [APP_ROLES.admin, APP_ROLES.vendor];
+const VENDOR_STAFF_ROLES = [APP_ROLES.admin, APP_ROLES.vendor];
+const ADMIN_ROLES = [APP_ROLES.admin];
+const VENDOR_ROLES = [APP_ROLES.admin, APP_ROLES.vendor];
 
 export const routes: Routes = [
   {
@@ -126,89 +139,133 @@ export const routes: Routes = [
   },
 
   // ── TEAMMATES' ROUTES (unchanged, just added authGuard) ─────────
-  featureRoute({
+  {
     path: 'menu',
     title: 'Menu',
-    componentPath: 'features/menu/menu-browse/menu-browse.component',
-  }),
-  featureRoute({
+    canActivate: [authGuard, roleGuard],
+    data: { roles: MENU_ROLES },
+    component: MenuBrowseComponent,
+  },
+  {
     path: 'menu/manage',
     title: 'Manage Menu',
-    componentPath: 'features/menu/menu-manage/menu-manage.component',
-  }),
-  featureRoute({
+    canActivate: [authGuard, roleGuard],
+    data: { roles: MENU_MANAGE_ROLES },
+    component: MenuManageComponent,
+  },
+  {
     path: 'cart',
     title: 'Cart',
-    componentPath: 'features/cart-order/cart/cart.component',
-  }),
+    canActivate: [authGuard, roleGuard],
+    data: { roles: EMPLOYEE_ORDER_ROLES },
+    loadComponent: () =>
+      import('./features/cart-order/cart/cart.component')
+        .then(m => m.CartComponent),
+  },
+  {
+    path: 'profile',
+    title: 'Profile',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/profile/profile.component')
+        .then(m => m.ProfileComponent),
+  },
   {
     path: 'checkout',
     title: 'Checkout',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: EMPLOYEE_ORDER_ROLES },
     component: CheckoutComponent,
   },
   {
     path: 'orders',
     title: 'Order History',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: EMPLOYEE_ORDER_ROLES },
     component: OrderHistoryComponent,
   },
   {
     path: 'orders/:orderId',
     title: 'Order Detail',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: EMPLOYEE_ORDER_ROLES },
     component: OrderDetailComponent,
   },
-  featureRoute({
+  {
     path: 'wallet',
     title: 'Wallet',
-    componentPath: 'features/wallet/wallet/wallet.component',
-  }),
+    canActivate: [authGuard, roleGuard],
+    data: { roles: EMPLOYEE_ORDER_ROLES },
+    component: WalletComponent,
+  },
   {
     path: 'pickup',
-    pathMatch: 'full',
-    redirectTo: 'pickup/scan',
+    title: 'Scan Pickup QR',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: VENDOR_STAFF_ROLES },
+    component: OrderQrScannerComponent,
   },
   {
     path: 'pickup/scan',
     title: 'Scan Pickup QR',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: VENDOR_STAFF_ROLES },
     component: OrderQrScannerComponent,
   },
   {
     path: 'pickup/upload',
     title: 'Upload Pickup QR',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: VENDOR_STAFF_ROLES },
     component: OrderQRUploadComponent,
   },
   {
     path: 'pickup/qr/:orderId',
     title: 'Pickup QR',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: EMPLOYEE_ORDER_ROLES },
     component: OrderQRDisplayComponent,
   },
   {
-    path: 'pickup/qr',
+    path: 'counter',
+    redirectTo: 'vendor/scanner',
     pathMatch: 'full',
-    redirectTo: 'orders',
   },
   {
-    path: 'counter',
-    pathMatch: 'full',
-    redirectTo: 'counter/scanner',
+    path: 'counter/scanner',
+    redirectTo: 'vendor/scanner',
+  },
+  {
+    path: 'counter/queue',
+    redirectTo: 'vendor/queue',
+  },
+  {
+    path: 'vendor/scanner',
+    title: 'Vendor Scanner',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: VENDOR_STAFF_ROLES },
+    component: OrderQrScannerComponent,
   },
   featureRoute({
-    path: 'counter/scanner',
-    title: 'Counter Scanner',
-    componentPath: 'features/pickup-scanner/scanner/scanner.component',
-  }),
-  featureRoute({
-    path: 'counter/queue',
-    title: 'Pickup Queue',
+    path: 'vendor/queue',
+    title: 'Vendor Queue',
     componentPath: 'features/pickup-scanner/queue/queue.component',
+    roles: VENDOR_STAFF_ROLES,
   }),
   {
     path: 'admin',
-    pathMatch: 'full',
-    redirectTo: 'admin/dashboard',
+    title: 'Admin Dashboard',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ADMIN_ROLES },
+    loadComponent: () =>
+    import('./features/admin/dashboard/dashboard.component')
+      .then(m => m.DashboardComponent),
   },
   {
     path: 'admin/dashboard',
     title: 'Admin Dashboard',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ADMIN_ROLES },
     loadComponent: () =>
     import('./features/admin/dashboard/dashboard.component')
       .then(m => m.DashboardComponent)
@@ -218,6 +275,8 @@ export const routes: Routes = [
   {
     path: 'admin/operations',
     title: 'Operations',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ADMIN_ROLES },
     loadComponent: () =>
     import('./features/admin/operations/operations.component')
       .then(m => m.OperationsComponent)
@@ -227,11 +286,18 @@ export const routes: Routes = [
   {
     path: 'admin/vendors',
     title: 'Manage Vendors',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ADMIN_ROLES },
     component: VendorManageComponent,
   },
   {
-    path: 'test/menu',
-    component: MenuBrowseComponent,
+    path: 'vendor/orders',
+    title: 'Vendor Orders',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: VENDOR_ROLES },
+    loadComponent: () =>
+      import('./features/vendor/vendor-orders/vendor-orders.component')
+        .then(m => m.VendorOrdersComponent),
   },
   {
     path: '**',

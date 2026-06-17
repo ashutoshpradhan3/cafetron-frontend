@@ -1,10 +1,12 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule, Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { Subject } from 'rxjs';
-import { finalize, takeUntil, timeout } from 'rxjs/operators';
+import { takeUntil, timeout } from 'rxjs/operators';
 
+import { AuthService } from '../../../core/services/auth.service';
+import { APP_ROLES } from '../../../models/auth.models';
 import { MenuManagementService } from '../services/menu-management.service';
 import { VendorManagementService } from '../../vendor/services/vendor-management.service';
 import { MenuItemResponse } from '../models/menu-management.models';
@@ -30,6 +32,8 @@ export class MenuManageComponent implements OnInit, OnDestroy {
 
   filterVendorId: number | null = null;
   filterAvailable: string = 'all';
+  currentVendorId: number | null = null;
+  currentVendorName = '';
 
   toast = '';
   toastType: 'success' | 'error' = 'success';
@@ -37,10 +41,10 @@ export class MenuManageComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   constructor(
+    private authService: AuthService,
     private menuService: MenuManagementService,
     private vendorService: VendorManagementService,
-    private cdr: ChangeDetectorRef,
-    private router: Router
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -58,6 +62,7 @@ export class MenuManageComponent implements OnInit, OnDestroy {
       .then(([items, vendors]) => {
         this.items = items || [];
         this.vendors = vendors || [];
+        this.applyRoleScope();
         this.applyFilters();
       })
       .catch((error) => {
@@ -84,16 +89,77 @@ export class MenuManageComponent implements OnInit, OnDestroy {
     });
   }
 
+  isAdminUser(): boolean {
+    return this.authService.hasRole(APP_ROLES.admin);
+  }
+
+  isVendorUser(): boolean {
+    return this.authService.hasRole(APP_ROLES.vendor);
+  }
+
+  canEditItem(item: MenuItemResponse): boolean {
+    if (this.isAdminUser()) {
+      return true;
+    }
+
+    if (this.isVendorUser()) {
+      return this.currentVendorId !== null && item.vendorId === this.currentVendorId;
+    }
+
+    return false;
+  }
+
+  canDeleteItem(item: MenuItemResponse): boolean {
+    return this.isAdminUser() && this.canEditItem(item);
+  }
+
+  private applyRoleScope(): void {
+    if (!this.isVendorUser()) {
+      return;
+    }
+
+    const userEmail = this.authService.getUserEmail()?.trim().toLowerCase();
+    const matchedVendor = this.vendors.find(
+      (vendor) => vendor.email.trim().toLowerCase() === userEmail
+    );
+
+    if (!matchedVendor) {
+      this.currentVendorId = null;
+      this.currentVendorName = '';
+      this.vendors = [];
+      this.items = [];
+      this.filteredItems = [];
+      this.errorMessage = 'This vendor account is not linked to a vendor profile yet.';
+      return;
+    }
+
+    this.currentVendorId = matchedVendor.id;
+    this.currentVendorName = matchedVendor.name;
+    this.filterVendorId = matchedVendor.id;
+    this.vendors = [matchedVendor];
+    this.items = this.items.filter((item) => item.vendorId === matchedVendor.id);
+  }
+
   onFilterChange(): void {
     this.applyFilters();
   }
 
   openCreateForm(): void {
+    if (this.isVendorUser() && this.currentVendorId === null) {
+      this.showToast('Your vendor account is not linked to a vendor profile.', 'error');
+      return;
+    }
+
     this.selectedItem = null;
     this.showForm = true;
   }
 
   openEditForm(item: MenuItemResponse): void {
+    if (!this.canEditItem(item)) {
+      this.showToast('You can only edit items assigned to your vendor account.', 'error');
+      return;
+    }
+
     this.selectedItem = item;
     this.showForm = true;
   }
@@ -110,6 +176,11 @@ export class MenuManageComponent implements OnInit, OnDestroy {
   }
 
   deleteItem(item: MenuItemResponse): void {
+    if (!this.canDeleteItem(item)) {
+      this.showToast('Only admins can delete menu items.', 'error');
+      return;
+    }
+
     if (!confirm(`Delete "${item.itemName}"?`)) return;
 
     this.menuService
@@ -130,6 +201,11 @@ export class MenuManageComponent implements OnInit, OnDestroy {
   }
 
   toggleAvailability(item: MenuItemResponse): void {
+    if (!this.canEditItem(item)) {
+      this.showToast('You can only update items assigned to your vendor account.', 'error');
+      return;
+    }
+
     this.menuService
       .toggleAvailability(item.id, !item.isAvailable)
       .pipe(takeUntil(this.destroy$))

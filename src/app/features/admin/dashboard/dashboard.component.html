@@ -6,6 +6,7 @@
       <p class="page-sub">Daily order health, revenue movement, and vendor performance.</p>
     </div>
     <div class="header-controls">
+      <a class="export-btn" routerLink="/admin/vendors">Manage Vendors</a>
       <div class="date-group">
         <label class="ctrl-label">Date</label>
         <input
@@ -17,6 +18,10 @@
         />
       </div>
     </div>
+    <svg viewBox="0 0 360 160" aria-hidden="true">
+      <path d="M34 124c28-42 71-65 128-67 70-3 111 25 162 69" />
+      <path d="M74 118V88M132 118V62M190 118V78M248 118V46M306 118V96" />
+    </svg>
   </header>
 
   <section class="skeleton-wrapper" *ngIf="loading">

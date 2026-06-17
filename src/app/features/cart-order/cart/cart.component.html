@@ -1,0 +1,71 @@
+<main class="cart-page">
+  <header class="app-topbar">
+    <div class="topbar-left">
+      <button class="icon-btn" routerLink="/menu" type="button" aria-label="Back to menu">
+        <span class="material-symbols-outlined">arrow_back</span>
+      </button>
+      <h1>Cart</h1>
+    </div>
+    <a class="profile-link" routerLink="/profile">
+      <span class="material-symbols-outlined">account_circle</span>
+      Profile
+    </a>
+  </header>
+
+  <section class="cart-shell">
+    <div class="page-title-block">
+      <p class="eyebrow">Order preview</p>
+      <h2>Your cart</h2>
+      <p>{{ cartItemCount }} item{{ cartItemCount === 1 ? '' : 's' }} ready for checkout.</p>
+    </div>
+
+    <section *ngIf="cartItems.length === 0" class="empty-cart-card">
+      <span class="material-symbols-outlined">shopping_cart_off</span>
+      <h3>Your cart is empty</h3>
+      <p>Add items from today's menu and they will appear here.</p>
+      <a routerLink="/menu">Browse menu</a>
+    </section>
+
+    <section *ngIf="cartItems.length > 0" class="cart-layout">
+      <div class="cart-items">
+        <article *ngFor="let item of cartItems" class="cart-item-card">
+          <div class="item-mark">{{ item.itemName.charAt(0) }}</div>
+          <div class="item-copy">
+            <h3>{{ item.itemName }}</h3>
+            <p>{{ item.vendorName || item.foodType || 'Cafetron item' }}</p>
+            <strong>₹{{ item.price | number: '1.2-2' }}</strong>
+          </div>
+          <div class="quantity-control">
+            <button type="button" (click)="decreaseQuantity(item)" aria-label="Decrease quantity">
+              <span class="material-symbols-outlined">remove</span>
+            </button>
+            <span>{{ item.quantity }}</span>
+            <button type="button" (click)="increaseQuantity(item)" aria-label="Increase quantity">
+              <span class="material-symbols-outlined">add</span>
+            </button>
+          </div>
+          <button class="remove-btn" type="button" (click)="removeFromCart(item)" aria-label="Remove item">
+            <span class="material-symbols-outlined">delete</span>
+          </button>
+        </article>
+      </div>
+
+      <aside class="summary-card">
+        <p class="eyebrow">Summary</p>
+        <div class="summary-row">
+          <span>Items</span>
+          <strong>{{ cartItemCount }}</strong>
+        </div>
+        <div class="summary-row">
+          <span>Total</span>
+          <strong>₹{{ cartTotal | number: '1.2-2' }}</strong>
+        </div>
+        <button class="checkout-btn" type="button" (click)="goToCheckout()">
+          <span>Checkout</span>
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </button>
+        <button class="clear-btn" type="button" (click)="clearCart()">Clear cart</button>
+      </aside>
+    </section>
+  </section>
+</main>

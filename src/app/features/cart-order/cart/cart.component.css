@@ -1,0 +1,251 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.cart-page {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.profile-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid var(--glass-line);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.cart-shell {
+  display: grid;
+  gap: 18px;
+  width: min(1120px, 100%);
+  margin: 0 auto;
+  padding: 28px 18px;
+}
+
+.page-title-block {
+  display: grid;
+  gap: 8px;
+}
+
+.eyebrow,
+.page-title-block p {
+  margin: 0;
+}
+
+.eyebrow {
+  color: var(--primary);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.page-title-block h2 {
+  margin: 0;
+  color: var(--text);
+  font-size: clamp(38px, 7vw, 66px);
+  line-height: 0.95;
+}
+
+.page-title-block p,
+.empty-cart-card p,
+.item-copy p {
+  color: var(--muted);
+}
+
+.empty-cart-card,
+.cart-item-card,
+.summary-card {
+  border: 1px solid var(--glass-line);
+  background: var(--glass);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-shadow), var(--glass-glow);
+}
+
+.empty-cart-card {
+  display: grid;
+  place-items: center;
+  gap: 10px;
+  min-height: 300px;
+  padding: 34px;
+  border-radius: 18px;
+  text-align: center;
+}
+
+.empty-cart-card .material-symbols-outlined {
+  color: rgba(255, 255, 255, 0.34);
+  font-size: 72px;
+}
+
+.empty-cart-card h3 {
+  margin: 0;
+  color: var(--text);
+  font-size: 28px;
+}
+
+.empty-cart-card a {
+  color: var(--primary);
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.cart-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
+  gap: 18px;
+  align-items: start;
+}
+
+.cart-items {
+  display: grid;
+  gap: 12px;
+}
+
+.cart-item-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  gap: 14px;
+  align-items: center;
+  min-width: 0;
+  padding: 16px;
+  border-radius: 16px;
+}
+
+.item-mark {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 14px;
+  background: var(--primary-action);
+  color: #fff;
+  font-weight: 900;
+}
+
+.item-copy h3,
+.item-copy p {
+  margin: 0;
+}
+
+.item-copy h3 {
+  color: var(--text);
+  font-size: 18px;
+}
+
+.item-copy p {
+  margin-top: 4px;
+}
+
+.item-copy strong {
+  display: block;
+  margin-top: 6px;
+  color: var(--primary);
+}
+
+.quantity-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.quantity-control button,
+.remove-btn {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--glass-line);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.quantity-control span {
+  min-width: 20px;
+  text-align: center;
+  font-weight: 900;
+}
+
+.remove-btn {
+  color: var(--danger);
+}
+
+.summary-card {
+  position: sticky;
+  top: 84px;
+  display: grid;
+  gap: 14px;
+  padding: 20px;
+  border-radius: 18px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  color: var(--muted);
+}
+
+.summary-row strong {
+  color: var(--text);
+}
+
+.checkout-btn,
+.clear-btn {
+  min-height: 48px;
+  border-radius: var(--radius);
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.checkout-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: 0;
+  background: var(--primary-action);
+  color: #fff;
+}
+
+.clear-btn {
+  border: 1px solid var(--glass-line);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+}
+
+@media (max-width: 820px) {
+  .cart-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .summary-card {
+    position: static;
+  }
+}
+
+@media (max-width: 560px) {
+  .cart-shell {
+    padding: 22px 12px;
+  }
+
+  .cart-item-card {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .quantity-control,
+  .remove-btn {
+    grid-column: 2;
+  }
+}

@@ -1,37 +1,58 @@
-<div class="login-container">
-    <div class="login-card">
+<main class="auth-page">
+  <section class="auth-shell">
+    <aside class="auth-art" aria-hidden="true">
+      <p class="eyebrow">Cafetron</p>
+      <h1>Fresh meals, fast pickup.</h1>
+      <svg viewBox="0 0 420 300" role="img">
+        <path class="plate" d="M98 212c42 38 153 42 218 9 62-31 42-91-31-103-78-13-223 17-236 55-5 15 9 29 49 39Z" />
+        <path class="steam" d="M156 98c-23-31 27-35 2-69M216 96c-22-29 26-39 2-72M276 103c-18-28 25-33 7-64" />
+        <path class="fork" d="M320 80v110M342 78v112M364 78v112M320 116h44" />
+        <path class="card-path" d="M113 190c24-20 61-31 105-31 43 0 74 9 97 27" />
+      </svg>
+    </aside>
 
-        <h2>Cafetron</h2>
-        <p class="subtitle">Sign in to your account</p>
+    <section class="auth-card">
+      <div class="brand-mark">
+        <span class="material-symbols-outlined">restaurant</span>
+      </div>
+      <p class="eyebrow">Welcome back</p>
+      <h2>Sign in</h2>
+      <p class="subtitle">Use your employee account to continue.</p>
 
-        <form (ngSubmit)="onSubmit()">
+      <form (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="employeeId">Employee ID</label>
+          <div class="input-shell">
+            <span class="material-symbols-outlined">badge</span>
+            <input id="employeeId" type="text" [(ngModel)]="credentials.employeeId" name="employeeId"
+              placeholder="e.g. EMP001" required />
+          </div>
+        </div>
 
-            <div class="form-group">
-                <label for="employeeId">Employee ID</label>
-                <input id="employeeId" type="text" [(ngModel)]="credentials.employeeId" name="employeeId"
-                    placeholder="e.g. EMP001" required />
-            </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="input-shell">
+            <span class="material-symbols-outlined">lock</span>
+            <input id="password" type="password" [(ngModel)]="credentials.password" name="password"
+              placeholder="Enter your password" required />
+          </div>
+        </div>
 
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input id="password" type="password" [(ngModel)]="credentials.password" name="password"
-                    placeholder="Enter your password" required />
-            </div>
+        <div class="error-message" *ngIf="errorMessage">
+          <span class="material-symbols-outlined">error</span>
+          {{ errorMessage }}
+        </div>
 
-            <div class="error-message" *ngIf="errorMessage">
-                {{ errorMessage }}
-            </div>
+        <button type="submit" [disabled]="isLoading">
+          <span>{{ isLoading ? 'Signing in...' : 'Sign In' }}</span>
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </button>
+      </form>
 
-            <button type="submit" [disabled]="isLoading">
-                {{ isLoading ? 'Signing in...' : 'Sign In' }}
-            </button>
-
-        </form>
-
-        <p class="register-link">
-            Don't have an account?
-            <a routerLink="/register">Register</a>
-        </p>
-
-    </div>
-</div>
+      <p class="register-link">
+        Don't have an account?
+        <a routerLink="/register">Register</a>
+      </p>
+    </section>
+  </section>
+</main>

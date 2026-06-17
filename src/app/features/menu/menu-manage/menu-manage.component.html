@@ -1,37 +1,60 @@
-<div class="menu-manage-wrapper">
+<main class="menu-manage-wrapper">
   <div class="menu-manage-container">
-    <!-- Header -->
-    <div class="page-header">
+    <section class="page-header">
       <div>
-        <h1>🍽️ Manage Menu Items</h1>
-        <p class="subtitle">Create, edit, and manage your menu items</p>
+        <p class="eyebrow">{{ isVendorUser() ? 'Vendor menu' : 'Admin kitchen' }}</p>
+        <h1>Manage Menu Items</h1>
+        <p class="subtitle">
+          {{ isVendorUser() ? 'Review and update only the items assigned to your vendor account.' : 'Create, edit, and control live cafeteria inventory.' }}
+        </p>
       </div>
-      <button class="btn btn-primary" (click)="openCreateForm()">+ Add New Item</button>
-    </div>
+      <div class="header-actions">
+        <a *ngIf="isVendorUser()" class="btn btn-secondary" routerLink="/vendor/orders">
+          <span class="material-symbols-outlined">receipt_long</span>
+          Orders
+        </a>
+        <a *ngIf="isAdminUser()" class="btn btn-secondary" routerLink="/admin/vendors">
+          <span class="material-symbols-outlined">storefront</span>
+          Vendors
+        </a>
+        <button class="btn btn-primary" type="button" (click)="openCreateForm()">
+          <span class="material-symbols-outlined">add</span>
+          Add Item
+        </button>
+      </div>
+      <svg viewBox="0 0 360 160" aria-hidden="true">
+        <path d="M28 126c38-54 104-80 180-71 54 6 99 30 124 70" />
+        <path d="M116 90c-9-30 22-35 11-62M188 82c-12-29 24-35 10-64M260 91c-10-29 24-32 12-61" />
+      </svg>
+    </section>
 
-    <!-- Error Alert -->
     <div *ngIf="errorMessage" class="alert alert-error">
-      <span class="alert-icon">⚠️</span>
+      <span class="material-symbols-outlined">error</span>
       <span>{{ errorMessage }}</span>
     </div>
 
-    <!-- Success Toast -->
     <div *ngIf="toast" [ngClass]="{'toast': true, 'toast-success': toastType === 'success', 'toast-error': toastType === 'error'}">
       {{ toast }}
     </div>
 
-    <!-- Filter Bar -->
-    <div class="filter-bar" *ngIf="!isLoading && items.length > 0">
+    <div *ngIf="isVendorUser() && currentVendorName" class="alert alert-info">
+      <span class="material-symbols-outlined">lock</span>
+      <span>
+        Managing items for {{ currentVendorName }}. Vendor assignment and delete controls stay locked for vendor accounts.
+      </span>
+    </div>
+
+    <section class="filter-bar" *ngIf="!isLoading && items.length > 0">
       <div class="filter-group">
-        <label>Vendor:</label>
-        <select [(ngModel)]="filterVendorId" (change)="onFilterChange()">
-          <option [value]="null">All Vendors</option>
+        <label>Vendor</label>
+        <select [(ngModel)]="filterVendorId" (change)="onFilterChange()" [disabled]="isVendorUser()">
+          <option *ngIf="!isVendorUser()" [ngValue]="null">All Vendors</option>
           <option *ngFor="let vendor of vendors" [value]="vendor.id">{{ vendor.name }}</option>
         </select>
       </div>
 
       <div class="filter-group">
-        <label>Status:</label>
+        <label>Status</label>
         <select [(ngModel)]="filterAvailable" (change)="onFilterChange()">
           <option value="all">All Items</option>
           <option value="available">Available Only</option>
@@ -40,76 +63,79 @@
       </div>
 
       <div class="filter-info">Showing {{ filteredItems.length }} of {{ items.length }} items</div>
-    </div>
+    </section>
 
-    <!-- Loading State -->
-    <div *ngIf="isLoading" class="loading-state">
+    <section *ngIf="isLoading" class="loading-state">
       <div class="spinner"></div>
       <p>Loading menu items...</p>
-    </div>
+    </section>
 
-    <!-- Empty State -->
-    <div *ngIf="!isLoading && items.length === 0" class="empty-state">
-      <div class="empty-icon">📋</div>
+    <section *ngIf="!isLoading && items.length === 0" class="empty-state">
+      <div class="empty-icon"><span class="material-symbols-outlined">inventory_2</span></div>
       <h2>No Menu Items Yet</h2>
       <p>Create your first menu item to get started.</p>
       <button class="btn btn-primary" (click)="openCreateForm()">Create Item</button>
-    </div>
+    </section>
 
-    <!-- Items Grid -->
-    <div *ngIf="!isLoading && filteredItems.length > 0" class="items-grid">
-      <div *ngFor="let item of filteredItems" class="item-card">
-        <!-- Card Header -->
+    <section *ngIf="!isLoading && filteredItems.length > 0" class="items-grid">
+      <article *ngFor="let item of filteredItems" class="item-card">
         <div class="card-header">
-          <div>
-            <h3>{{ item.itemName }}</h3>
-            <p class="vendor-name">{{ getVendorName(item.vendorId) }}</p>
+          <div class="item-title">
+            <span class="material-symbols-outlined">restaurant_menu</span>
+            <div>
+              <h3>{{ item.itemName }}</h3>
+              <p class="vendor-name">{{ getVendorName(item.vendorId) }}</p>
+            </div>
           </div>
           <span [ngClass]="getStatusClass(item.isAvailable)" class="status-badge">
             {{ item.isAvailable ? 'Available' : 'Unavailable' }}
           </span>
         </div>
 
-        <!-- Card Body -->
         <div class="card-body">
           <div class="info-row">
-            <span class="label">💰 Price</span>
+            <span class="label"><span class="material-symbols-outlined">payments</span> Price</span>
             <span class="value">${{ item.price | number: '1.2-2' }}</span>
           </div>
           <div class="info-row">
-            <span class="label">📦 Stock</span>
+            <span class="label"><span class="material-symbols-outlined">inventory</span> Stock</span>
             <span class="value">{{ item.stock }} units</span>
           </div>
           <div class="info-row">
-            <span class="label">🏷️ Type</span>
+            <span class="label"><span class="material-symbols-outlined">label</span> Type</span>
             <span class="value">{{ item.foodType }}</span>
           </div>
         </div>
 
-        <!-- Card Footer -->
         <div class="card-footer">
-          <button class="btn-icon btn-secondary" (click)="openEditForm(item)" title="Edit">✏️</button>
-          <button class="btn-icon btn-toggle" (click)="toggleAvailability(item)"
-                  title="Toggle Availability">{{ item.isAvailable ? '✓' : '✗' }}</button>
-          <button class="btn-icon btn-danger" (click)="deleteItem(item)" title="Delete">🗑️</button>
+          <button class="btn-icon btn-secondary" type="button" [disabled]="!canEditItem(item)" (click)="openEditForm(item)" title="Edit">
+            <span class="material-symbols-outlined">edit</span>
+          </button>
+          <button class="btn-icon btn-toggle" type="button" [disabled]="!canEditItem(item)" (click)="toggleAvailability(item)" title="Toggle Availability">
+            <span class="material-symbols-outlined">{{ item.isAvailable ? 'check' : 'close' }}</span>
+          </button>
+          <button class="btn-icon btn-danger" type="button" [disabled]="!canDeleteItem(item)" (click)="deleteItem(item)" [title]="canDeleteItem(item) ? 'Delete' : 'Only admins can delete items'">
+            <span class="material-symbols-outlined">delete</span>
+          </button>
         </div>
-      </div>
-    </div>
+      </article>
+    </section>
 
-    <!-- Empty Filtered State -->
-    <div *ngIf="!isLoading && items.length > 0 && filteredItems.length === 0" class="empty-state">
-      <div class="empty-icon">🔍</div>
+    <section *ngIf="!isLoading && items.length > 0 && filteredItems.length === 0" class="empty-state">
+      <div class="empty-icon"><span class="material-symbols-outlined">search_off</span></div>
       <h2>No Items Match Filters</h2>
       <p>Try adjusting your filter criteria.</p>
-    </div>
+    </section>
   </div>
 
-  <!-- Form Modal -->
   <menu-item-form
     *ngIf="showForm"
     [item]="selectedItem"
     [vendors]="vendors"
+    [allowedVendorId]="currentVendorId"
+    [allowedVendorName]="currentVendorName"
+    [vendorAssignmentLocked]="isVendorUser()"
     (close)="closeForm()"
     (save)="onFormSave()"
   ></menu-item-form>
-</div>
+</main>

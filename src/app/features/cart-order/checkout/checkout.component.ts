@@ -6,7 +6,9 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { OrderApiService } from '../services/order-api.service';
-import { PlaceOrderRequest, PlaceOrderItemRequest } from '../models/order.models';
+import { PlaceOrderRequest } from '../models/order.models';
+import { CartItem, CartService } from '../services/cart.service';
+import { WalletService } from '../../wallet/wallet.service';
 
 @Component({
   selector: 'checkout',
@@ -16,12 +18,23 @@ import { PlaceOrderRequest, PlaceOrderItemRequest } from '../models/order.models
   styleUrl: './checkout.component.css',
 })
 export class CheckoutComponent implements OnInit, OnDestroy {
-  cartItems: PlaceOrderItemRequest[] = [];
+  cartItems: CartItem[] = [];
   selectedPickupSlot: string = '';
   totalAmount: number = 0;
+  walletBalance: number | null = null;
   isLoading: boolean = false;
+  isWalletLoading: boolean = false;
   errorMessage: string = '';
+  checkoutView: 'cards' | 'overview' = 'cards';
+  activeStep = 0;
   private destroy$ = new Subject<void>();
+
+  checkoutSteps = [
+    { label: 'Time slot', icon: 'schedule' },
+    { label: 'Preview food', icon: 'restaurant' },
+    { label: 'Payment', icon: 'payments' },
+    { label: 'Place order', icon: 'receipt_long' },
+  ];
 
   pickupSlots = [
     '10:00 AM',
@@ -37,6 +50,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
   constructor(
     private orderApi: OrderApiService,
+    private cartService: CartService,
+    private walletService: WalletService,
     private router: Router
   ) {}
 
@@ -48,16 +63,74 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Mock cart data - replace with real cart service later
-    this.cartItems = [
-      { menuItemId: 101, quantity: 2 },
-      { menuItemId: 201, quantity: 1 },
-    ];
-    this.calculateTotal();
+    this.cartService.cartItems$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((items) => {
+        this.cartItems = items;
+        this.calculateTotal();
+      });
+
+    this.loadWalletBalance();
   }
 
   private calculateTotal(): void {
-    this.totalAmount = this.cartItems.reduce((sum, item) => sum + (item.quantity * 50), 0);
+    this.totalAmount = this.cartItems.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0
+    );
+  }
+
+  private loadWalletBalance(): void {
+    this.isWalletLoading = true;
+
+    this.walletService
+      .getWallet()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (wallet) => {
+          this.walletBalance = wallet.balance;
+          this.isWalletLoading = false;
+        },
+        error: (error) => {
+          console.error('Failed to load wallet:', error);
+          this.walletBalance = null;
+          this.isWalletLoading = false;
+        },
+      });
+  }
+
+  getWalletLabel(): string {
+    if (this.isWalletLoading) {
+      return 'Loading...';
+    }
+
+    return this.walletBalance === null
+      ? 'Unavailable'
+      : `$${this.walletBalance.toFixed(2)}`;
+  }
+
+  getLineTotal(item: CartItem): number {
+    return item.price * item.quantity;
+  }
+
+  getCartInitial(item: CartItem): string {
+    return item.itemName?.trim().charAt(0).toUpperCase() || String(item.menuItemId);
+  }
+
+  setCheckoutView(view: 'cards' | 'overview'): void {
+    this.checkoutView = view;
+  }
+
+  goToStep(index: number): void {
+    this.activeStep = Math.max(0, Math.min(index, this.checkoutSteps.length - 1));
+  }
+
+  nextStep(): void {
+    this.goToStep(this.activeStep + 1);
+  }
+
+  previousStep(): void {
+    this.goToStep(this.activeStep - 1);
   }
 
   onPlaceOrder(): void {
@@ -76,7 +149,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
     const request: PlaceOrderRequest = {
       pickupSlot: this.selectedPickupSlot,
-      items: this.cartItems,
+      items: this.cartService.toPlaceOrderItems(),
     };
 
     this.orderApi
@@ -85,6 +158,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response) => {
           console.log('✅ Order placed:', response);
+          this.cartService.clearCart();
           this.router.navigate(['/orders', response.orderId]);
         },
         error: (error) => {

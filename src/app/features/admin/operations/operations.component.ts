@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { interval, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { OperationsService, OpsStatusDTO } from './operations.service';
@@ -8,7 +9,7 @@ import { OperationsService, OpsStatusDTO } from './operations.service';
 @Component({
   selector: 'app-operations',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './operations.component.html',
   styleUrls: ['./operations.component.css']
 })

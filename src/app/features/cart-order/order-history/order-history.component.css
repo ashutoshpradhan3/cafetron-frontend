@@ -5,7 +5,6 @@
 
 .orders-page {
   min-height: 100vh;
-  padding-bottom: 86px;
   background: var(--bg);
   color: var(--text);
 }
@@ -36,7 +35,7 @@
 
 .page-title-block h1 {
   margin: 0 0 12px;
-  color: #090706;
+  color: var(--text);
   font-size: 30px;
   line-height: 38px;
   font-weight: 900;
@@ -104,7 +103,7 @@
 
 .order-card h2 {
   margin: 0;
-  color: #090706;
+  color: var(--text);
   font-size: clamp(21px, 5vw, 24px);
   line-height: 30px;
 }
@@ -165,7 +164,7 @@
 }
 
 .order-bottom strong {
-  color: #090706;
+  color: var(--text);
   font-size: clamp(21px, 5vw, 24px);
 }
 
@@ -234,7 +233,7 @@
   place-items: center;
   gap: 10px;
   padding: 62px 0 34px;
-  color: rgba(88, 66, 55, 0.28);
+  color: rgba(255, 255, 255, 0.28);
   text-align: center;
 }
 
@@ -248,10 +247,6 @@
 }
 
 @media (max-width: 520px) {
-  .orders-page {
-    padding-bottom: 78px;
-  }
-
   .orders-shell {
     padding: 22px 14px;
   }

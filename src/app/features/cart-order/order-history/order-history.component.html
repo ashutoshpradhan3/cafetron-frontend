@@ -5,7 +5,7 @@
       <span>Cafetron</span>
     </div>
     <div class="wallet-pill">
-      <span>$42.50</span>
+      <span>{{ getWalletLabel() }}</span>
       <span class="profile-dot">D</span>
     </div>
   </header>
@@ -69,23 +69,4 @@
       </div>
     </section>
   </section>
-
-  <nav class="bottom-nav">
-    <a routerLink="/menu">
-      <span class="material-symbols-outlined">restaurant_menu</span>
-      <span>Menu</span>
-    </a>
-    <a routerLink="/orders" class="active">
-      <span class="material-symbols-outlined">receipt_long</span>
-      <span>Orders</span>
-    </a>
-    <a routerLink="/wallet">
-      <span class="material-symbols-outlined">account_balance_wallet</span>
-      <span>Wallet</span>
-    </a>
-    <a [routerLink]="orders.length ? ['/pickup/qr', orders[0].orderId] : ['/orders']">
-      <span class="material-symbols-outlined">qr_code_scanner</span>
-      <span>Pickup</span>
-    </a>
-  </nav>
 </main>

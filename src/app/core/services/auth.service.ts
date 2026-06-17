@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
+import { environment } from '../../../environments/environment';
 import {
+  APP_ROLES,
   AuthResponse,
   LoginRequest,
   RegisterRequest,
@@ -13,7 +15,7 @@ import {
 })
 export class AuthService {
 
-  private readonly API = 'http://localhost:8081/api';
+  private readonly API = environment.apiUrl;
   private readonly TOKEN_KEY = 'jwt_token';
   private readonly LEGACY_TOKEN_KEYS = ['cafetron_token', 'auth_token'];
   private readonly USER_KEY = 'cafetron_user';
@@ -45,15 +47,34 @@ export class AuthService {
   // ── Session management ───────────────────────────────────────────
 
   private saveSession(response: AuthResponse): void {
+    const normalizedResponse: AuthResponse = {
+      ...response,
+      role: this.normalizeRole(response.role) || response.role,
+    };
+
     localStorage.setItem(this.TOKEN_KEY, response.token);
     this.LEGACY_TOKEN_KEYS.forEach((key) => localStorage.removeItem(key));
-    localStorage.setItem(this.USER_KEY, JSON.stringify(response));
+    localStorage.setItem(this.USER_KEY, JSON.stringify(normalizedResponse));
   }
 
   logout(): void {
     localStorage.removeItem(this.TOKEN_KEY);
     this.LEGACY_TOKEN_KEYS.forEach((key) => localStorage.removeItem(key));
     localStorage.removeItem(this.USER_KEY);
+  }
+
+  private getStoredUser(): AuthResponse | null {
+    const user = localStorage.getItem(this.USER_KEY);
+    if (!user) {
+      return null;
+    }
+
+    try {
+      return JSON.parse(user) as AuthResponse;
+    } catch {
+      localStorage.removeItem(this.USER_KEY);
+      return null;
+    }
   }
 
   getToken(): string | null {
@@ -79,14 +100,68 @@ export class AuthService {
   }
 
   getRole(): string | null {
-    const user = localStorage.getItem(this.USER_KEY);
-    if (!user) return null;
-    return JSON.parse(user).role;
+    const role = this.getStoredUser()?.role || this.getRoleFromToken();
+    if (!role) {
+      return null;
+    }
+
+    return this.normalizeRole(role);
   }
 
   getUserName(): string | null {
-    const user = localStorage.getItem(this.USER_KEY);
-    if (!user) return null;
-    return JSON.parse(user).name;
+    return this.getStoredUser()?.name ?? null;
+  }
+
+  getUserEmail(): string | null {
+    return this.getStoredUser()?.email ?? null;
+  }
+
+  hasRole(...roles: string[]): boolean {
+    const role = this.getRole();
+    return !!role && roles.includes(role);
+  }
+
+  getDefaultRoute(): string {
+    switch (this.getRole()) {
+      case APP_ROLES.admin:
+        return '/admin';
+      case APP_ROLES.vendor:
+        return '/vendor/orders';
+      default:
+        return '/menu';
+    }
+  }
+
+  private normalizeRole(role: string | null | undefined): string | null {
+    if (!role) {
+      return null;
+    }
+
+    const normalizedRole = String(role).replace(/^ROLE_/i, '').trim().toUpperCase();
+    return normalizedRole === APP_ROLES.counter ? APP_ROLES.vendor : normalizedRole;
+  }
+
+  private getRoleFromToken(): string | null {
+    const token = this.getToken();
+    if (!token) {
+      return null;
+    }
+
+    const [, payload] = token.split('.');
+    if (!payload) {
+      return null;
+    }
+
+    try {
+      const normalizedPayload = payload.replace(/-/g, '+').replace(/_/g, '/');
+      const paddedPayload = normalizedPayload.padEnd(
+        normalizedPayload.length + ((4 - (normalizedPayload.length % 4)) % 4),
+        '='
+      );
+      const decoded = JSON.parse(atob(paddedPayload));
+      return this.normalizeRole(decoded?.role);
+    } catch {
+      return null;
+    }
   }
 }

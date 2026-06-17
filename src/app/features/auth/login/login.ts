@@ -37,7 +37,7 @@ export class LoginComponent {
       next: (response) => {
         this.isLoading = false;
         this.cdr.detectChanges();
-        this.redirectByRole(response.role);
+        this.router.navigate([this.authService.getDefaultRoute()]);
       },
       error: (err) => {
         this.isLoading = false;
@@ -47,16 +47,4 @@ export class LoginComponent {
     });
   }
 
-  private redirectByRole(role: string): void {
-    switch (role) {
-      case 'ADMIN':
-        this.router.navigate(['/admin']);
-        break;
-      case 'COUNTER':
-        this.router.navigate(['/counter']);
-        break;
-      default:
-        this.router.navigate(['/menu']);
-    }
-  }
 }

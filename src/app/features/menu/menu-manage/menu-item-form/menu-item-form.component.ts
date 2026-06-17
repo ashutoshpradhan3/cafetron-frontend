@@ -15,6 +15,9 @@ import { VendorResponse } from '../../../vendor/models/vendor-management.models'
 export class MenuItemFormComponent implements OnInit {
   @Input() item: MenuItemResponse | null = null;
   @Input() vendors: VendorResponse[] = [];
+  @Input() allowedVendorId: number | null = null;
+  @Input() allowedVendorName = '';
+  @Input() vendorAssignmentLocked = false;
   @Output() close = new EventEmitter<void>();
   @Output() save = new EventEmitter<void>();
 
@@ -40,6 +43,18 @@ export class MenuItemFormComponent implements OnInit {
       this.foodType = this.item.foodType;
       this.vendorId = this.item.vendorId;
     }
+
+    if (this.vendorAssignmentLocked && this.allowedVendorId !== null) {
+      this.vendorId = this.allowedVendorId;
+    }
+  }
+
+  get availableVendors(): VendorResponse[] {
+    if (!this.vendorAssignmentLocked || this.allowedVendorId === null) {
+      return this.vendors;
+    }
+
+    return this.vendors.filter((vendor) => vendor.id === this.allowedVendorId);
   }
 
   isFormValid(): boolean {
@@ -57,16 +72,37 @@ export class MenuItemFormComponent implements OnInit {
   onSubmit(): void {
     if (!this.isFormValid()) return;
 
+    if (this.vendorAssignmentLocked && this.allowedVendorId === null) {
+      this.errorMessage = 'This account is not linked to a vendor profile yet.';
+      this.cdr.detectChanges();
+      return;
+    }
+
+    if (
+      this.item &&
+      this.vendorAssignmentLocked &&
+      this.allowedVendorId !== null &&
+      this.item.vendorId !== this.allowedVendorId
+    ) {
+      this.errorMessage = 'You can only update items assigned to your vendor account.';
+      this.cdr.detectChanges();
+      return;
+    }
+
     this.errorMessage = '';
     this.isSaving = true;
     this.cdr.detectChanges();
+
+    const effectiveVendorId = this.vendorAssignmentLocked && this.allowedVendorId !== null
+      ? this.allowedVendorId
+      : this.vendorId;
 
     const request: MenuItemRequest = {
       itemName: this.itemName,
       price: this.price!,
       stock: this.stock!,
       foodType: this.foodType,
-      vendorId: this.vendorId!,
+      vendorId: effectiveVendorId!,
     };
 
     const operation$ = this.item

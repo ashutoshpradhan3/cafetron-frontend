@@ -44,7 +44,7 @@
 
 .hero-card h2 {
   margin: 0;
-  color: #090706;
+  color: var(--text);
   font-size: clamp(30px, 7vw, 38px);
   line-height: 1;
 }
@@ -61,7 +61,7 @@
 
 .section-card h2 {
   margin: 0 0 16px;
-  color: #090706;
+  color: var(--text);
   font-size: 24px;
 }
 
@@ -107,7 +107,7 @@
 
 .detail-list dd {
   margin: 0;
-  color: #090706;
+  color: var(--text);
   font-weight: 900;
   text-align: right;
   min-width: 0;
@@ -137,7 +137,7 @@
 }
 
 .item-card h3 {
-  color: #090706;
+  color: var(--text);
   font-size: clamp(18px, 4.6vw, 21px);
 }
 
@@ -147,7 +147,7 @@
 }
 
 .item-card strong {
-  color: #090706;
+  color: var(--text);
   font-size: 20px;
   white-space: nowrap;
 }
