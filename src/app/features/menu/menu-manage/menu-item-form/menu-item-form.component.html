@@ -1,68 +1,68 @@
-<div class="form-modal-overlay" (click)="onCancel()">
-  <div class="form-modal" (click)="$event.stopPropagation()">
-    <div class="modal-header">
+<div id="menu-item-form-overlay" class="form-modal-overlay" (click)="onCancel()">
+  <div id="menu-item-form-modal" class="form-modal" (click)="$event.stopPropagation()">
+    <div id="menu-item-form-header" class="modal-header">
       <h2>
         <span class="material-symbols-outlined">restaurant_menu</span>
         {{ item ? 'Edit Menu Item' : 'Create New Menu Item' }}
       </h2>
-      <button class="close-btn" (click)="onCancel()" type="button" aria-label="Close">
+      <button id="menu-item-form-close-btn" class="close-btn" (click)="onCancel()" type="button" aria-label="Close">
         <span class="material-symbols-outlined">close</span>
       </button>
     </div>
 
-    <div class="modal-body">
-      <div *ngIf="errorMessage" class="alert alert-error">
+    <div id="menu-item-form-body" class="modal-body">
+      <div id="menu-item-form-error-alert" *ngIf="errorMessage" class="alert alert-error">
         <span class="material-symbols-outlined">error</span>
         <span>{{ errorMessage }}</span>
       </div>
 
-      <div *ngIf="vendorAssignmentLocked && allowedVendorName" class="alert alert-info">
+      <div id="menu-item-form-vendor-info-alert" *ngIf="vendorAssignmentLocked && allowedVendorName" class="alert alert-info">
         <span class="material-symbols-outlined">lock</span>
         <span>This item stays assigned to {{ allowedVendorName }} for vendor accounts.</span>
       </div>
 
-      <form (ngSubmit)="onSubmit()">
+      <form id="menu-item-form" (ngSubmit)="onSubmit()">
         <div class="form-group">
-          <label for="itemName">Item Name *</label>
-          <input id="itemName" type="text" [(ngModel)]="itemName" name="itemName" placeholder="e.g., Grilled Chicken Sandwich" required />
-          <span *ngIf="!itemName" class="error-text">Item name is required</span>
+          <label for="menu-item-name-input">Item Name *</label>
+          <input id="menu-item-name-input" type="text" [(ngModel)]="itemName" name="itemName" placeholder="e.g., Grilled Chicken Sandwich" required />
+          <span id="menu-item-name-error" *ngIf="!itemName" class="error-text">Item name is required</span>
         </div>
 
         <div class="form-group">
-          <label for="vendorId">Vendor *</label>
-          <select id="vendorId" [(ngModel)]="vendorId" name="vendorId" [disabled]="vendorAssignmentLocked" required>
-            <option [ngValue]="null">-- Select Vendor --</option>
-            <option *ngFor="let vendor of availableVendors" [value]="vendor.id">{{ vendor.name }}</option>
+          <label for="menu-item-vendor-select">Vendor *</label>
+          <select id="menu-item-vendor-select" [(ngModel)]="vendorId" name="vendorId" [disabled]="vendorAssignmentLocked" required>
+            <option id="menu-item-vendor-empty-option" [ngValue]="null">-- Select Vendor --</option>
+            <option *ngFor="let vendor of availableVendors; let i = index" id="menu-item-vendor-option-{{ i + 1 }}" [value]="vendor.id">{{ vendor.name }}</option>
           </select>
-          <span *ngIf="vendorAssignmentLocked && allowedVendorName" class="helper-text">
+          <span id="menu-item-vendor-helper" *ngIf="vendorAssignmentLocked && allowedVendorName" class="helper-text">
             Vendor assignment is locked to {{ allowedVendorName }}.
           </span>
-          <span *ngIf="!vendorId" class="error-text">Vendor is required</span>
+          <span id="menu-item-vendor-error" *ngIf="!vendorId" class="error-text">Vendor is required</span>
         </div>
 
         <div class="form-row">
           <div class="form-group">
-            <label for="price">Price *</label>
-            <input id="price" type="number" [(ngModel)]="price" name="price" placeholder="0.00" step="0.01" min="0" required />
-            <span *ngIf="price === null || price <= 0" class="error-text">Price must be greater than 0</span>
+            <label for="menu-item-price-input">Price *</label>
+            <input id="menu-item-price-input" type="number" [(ngModel)]="price" name="price" placeholder="0.00" step="0.01" min="0" required />
+            <span id="menu-item-price-error" *ngIf="price === null || price <= 0" class="error-text">Price must be greater than 0</span>
           </div>
 
           <div class="form-group">
-            <label for="stock">Stock *</label>
-            <input id="stock" type="number" [(ngModel)]="stock" name="stock" placeholder="0" step="1" min="0" required />
-            <span *ngIf="stock === null || stock < 0" class="error-text">Stock cannot be negative</span>
+            <label for="menu-item-stock-input">Stock *</label>
+            <input id="menu-item-stock-input" type="number" [(ngModel)]="stock" name="stock" placeholder="0" step="1" min="0" required />
+            <span id="menu-item-stock-error" *ngIf="stock === null || stock < 0" class="error-text">Stock cannot be negative</span>
           </div>
         </div>
 
         <div class="form-group">
-          <label for="foodType">Food Type *</label>
-          <input id="foodType" type="text" [(ngModel)]="foodType" name="foodType" placeholder="e.g., Sandwich, Salad, Beverage" required />
-          <span *ngIf="!foodType" class="error-text">Food type is required</span>
+          <label for="menu-item-food-type-input">Food Type *</label>
+          <input id="menu-item-food-type-input" type="text" [(ngModel)]="foodType" name="foodType" placeholder="e.g., Sandwich, Salad, Beverage" required />
+          <span id="menu-item-food-type-error" *ngIf="!foodType" class="error-text">Food type is required</span>
         </div>
 
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancel</button>
-          <button type="submit" class="btn btn-primary" [disabled]="!isFormValid() || isSaving">
+        <div id="menu-item-form-footer" class="modal-footer">
+          <button id="menu-item-form-cancel-btn" type="button" class="btn btn-secondary" (click)="onCancel()">Cancel</button>
+          <button id="menu-item-form-submit-btn" type="submit" class="btn btn-primary" [disabled]="!isFormValid() || isSaving">
             {{ isSaving ? 'Saving...' : 'Save Item' }}
           </button>
         </div>

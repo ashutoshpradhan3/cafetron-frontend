@@ -1,18 +1,18 @@
-<section class="qr-page">
-  <article class="qr-card">
-    <div class="qr-header">
+<section id="qr-display-page" class="qr-page">
+  <article id="qr-display-card" class="qr-card">
+    <div id="qr-display-header" class="qr-header">
       <span class="qr-badge material-symbols-outlined">qr_code_2</span>
       <p class="eyebrow">Pickup QR</p>
-      <h1>Order #{{ orderId }}</h1>
+      <h1 id="qr-display-order-id">Order #{{ orderId }}</h1>
       <p>Show this code at the cafeteria counter for a faster pickup handoff.</p>
     </div>
 
-    <div class="qr-frame" *ngIf="base64QRString; else loadingQr">
-      <img [src]="'data:image/png;base64,' + base64QRString" alt="Order QR code" />
+    <div id="qr-display-frame" class="qr-frame" *ngIf="base64QRString; else loadingQr">
+      <img id="qr-display-image" [src]="'data:image/png;base64,' + base64QRString" alt="Order QR code" />
     </div>
 
     <ng-template #loadingQr>
-      <div class="qr-frame qr-loading">
+      <div id="qr-display-loading-state" class="qr-frame qr-loading">
         <div class="spinner"></div>
         <span>Preparing QR code...</span>
       </div>

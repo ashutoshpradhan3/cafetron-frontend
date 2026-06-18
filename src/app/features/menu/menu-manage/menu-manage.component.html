@@ -1,6 +1,6 @@
-<main class="menu-manage-wrapper">
-  <div class="menu-manage-container">
-    <section class="page-header">
+<main id="menu-manage-page" class="menu-manage-wrapper">
+  <div id="menu-manage-container" class="menu-manage-container">
+    <section id="menu-manage-header" class="page-header">
       <div>
         <p class="eyebrow">{{ isVendorUser() ? 'Vendor menu' : 'Admin kitchen' }}</p>
         <h1>Manage Menu Items</h1>
@@ -9,15 +9,15 @@
         </p>
       </div>
       <div class="header-actions">
-        <a *ngIf="isVendorUser()" class="btn btn-secondary" routerLink="/vendor/orders">
+        <a id="menu-manage-vendor-orders-link" *ngIf="isVendorUser()" class="btn btn-secondary" routerLink="/vendor/orders">
           <span class="material-symbols-outlined">receipt_long</span>
           Orders
         </a>
-        <a *ngIf="isAdminUser()" class="btn btn-secondary" routerLink="/admin/vendors">
+        <a id="menu-manage-vendors-link" *ngIf="isAdminUser()" class="btn btn-secondary" routerLink="/admin/vendors">
           <span class="material-symbols-outlined">storefront</span>
           Vendors
         </a>
-        <button class="btn btn-primary" type="button" (click)="openCreateForm()">
+        <button id="menu-manage-add-item-btn" class="btn btn-primary" type="button" (click)="openCreateForm()">
           <span class="material-symbols-outlined">add</span>
           Add Item
         </button>
@@ -28,66 +28,66 @@
       </svg>
     </section>
 
-    <div *ngIf="errorMessage" class="alert alert-error">
+    <div id="menu-manage-error-alert" *ngIf="errorMessage" class="alert alert-error">
       <span class="material-symbols-outlined">error</span>
       <span>{{ errorMessage }}</span>
     </div>
 
-    <div *ngIf="toast" [ngClass]="{'toast': true, 'toast-success': toastType === 'success', 'toast-error': toastType === 'error'}">
+    <div id="menu-manage-toast" *ngIf="toast" [ngClass]="{'toast': true, 'toast-success': toastType === 'success', 'toast-error': toastType === 'error'}">
       {{ toast }}
     </div>
 
-    <div *ngIf="isVendorUser() && currentVendorName" class="alert alert-info">
+    <div id="menu-manage-vendor-info-alert" *ngIf="isVendorUser() && currentVendorName" class="alert alert-info">
       <span class="material-symbols-outlined">lock</span>
       <span>
         Managing items for {{ currentVendorName }}. Vendor assignment and delete controls stay locked for vendor accounts.
       </span>
     </div>
 
-    <section class="filter-bar" *ngIf="!isLoading && items.length > 0">
-      <div class="filter-group">
+    <section id="menu-manage-filter-bar" class="filter-bar" *ngIf="!isLoading && items.length > 0">
+      <div id="menu-manage-vendor-filter-group" class="filter-group">
         <label>Vendor</label>
-        <select [(ngModel)]="filterVendorId" (change)="onFilterChange()" [disabled]="isVendorUser()">
+        <select id="menu-manage-vendor-filter-select" [(ngModel)]="filterVendorId" (change)="onFilterChange()" [disabled]="isVendorUser()">
           <option *ngIf="!isVendorUser()" [ngValue]="null">All Vendors</option>
-          <option *ngFor="let vendor of vendors" [value]="vendor.id">{{ vendor.name }}</option>
+          <option *ngFor="let vendor of vendors; let i = index" id="menu-manage-vendor-filter-option-{{ i + 1 }}" [value]="vendor.id">{{ vendor.name }}</option>
         </select>
       </div>
 
-      <div class="filter-group">
+      <div id="menu-manage-status-filter-group" class="filter-group">
         <label>Status</label>
-        <select [(ngModel)]="filterAvailable" (change)="onFilterChange()">
+        <select id="menu-manage-status-filter-select" [(ngModel)]="filterAvailable" (change)="onFilterChange()">
           <option value="all">All Items</option>
           <option value="available">Available Only</option>
           <option value="unavailable">Unavailable Only</option>
         </select>
       </div>
 
-      <div class="filter-info">Showing {{ filteredItems.length }} of {{ items.length }} items</div>
+      <div id="menu-manage-filter-info" class="filter-info">Showing {{ filteredItems.length }} of {{ items.length }} items</div>
     </section>
 
-    <section *ngIf="isLoading" class="loading-state">
+    <section id="menu-manage-loading-state" *ngIf="isLoading" class="loading-state">
       <div class="spinner"></div>
       <p>Loading menu items...</p>
     </section>
 
-    <section *ngIf="!isLoading && items.length === 0" class="empty-state">
+    <section id="menu-manage-empty-state" *ngIf="!isLoading && items.length === 0" class="empty-state">
       <div class="empty-icon"><span class="material-symbols-outlined">inventory_2</span></div>
       <h2>No Menu Items Yet</h2>
       <p>Create your first menu item to get started.</p>
-      <button class="btn btn-primary" (click)="openCreateForm()">Create Item</button>
+      <button id="menu-manage-create-empty-btn" class="btn btn-primary" (click)="openCreateForm()">Create Item</button>
     </section>
 
-    <section *ngIf="!isLoading && filteredItems.length > 0" class="items-grid">
-      <article *ngFor="let item of filteredItems" class="item-card">
+    <section id="menu-manage-items-grid" *ngIf="!isLoading && filteredItems.length > 0" class="items-grid">
+      <article *ngFor="let item of filteredItems; let i = index" id="menu-manage-item-card-{{ i + 1 }}" class="item-card">
         <div class="card-header">
           <div class="item-title">
             <span class="material-symbols-outlined">restaurant_menu</span>
             <div>
-              <h3>{{ item.itemName }}</h3>
-              <p class="vendor-name">{{ getVendorName(item.vendorId) }}</p>
+              <h3 id="menu-manage-item-name-{{ i + 1 }}">{{ item.itemName }}</h3>
+              <p id="menu-manage-item-vendor-{{ i + 1 }}" class="vendor-name">{{ getVendorName(item.vendorId) }}</p>
             </div>
           </div>
-          <span [ngClass]="getStatusClass(item.isAvailable)" class="status-badge">
+          <span id="menu-manage-item-status-{{ i + 1 }}" [ngClass]="getStatusClass(item.isAvailable)" class="status-badge">
             {{ item.isAvailable ? 'Available' : 'Unavailable' }}
           </span>
         </div>
@@ -95,33 +95,45 @@
         <div class="card-body">
           <div class="info-row">
             <span class="label"><span class="material-symbols-outlined">payments</span> Price</span>
-            <span class="value">${{ item.price | number: '1.2-2' }}</span>
+            <span id="menu-manage-item-price-{{ i + 1 }}" class="value">${{ item.price | number: '1.2-2' }}</span>
           </div>
           <div class="info-row">
             <span class="label"><span class="material-symbols-outlined">inventory</span> Stock</span>
-            <span class="value">{{ item.stock }} units</span>
+            <span id="menu-manage-item-stock-{{ i + 1 }}" class="value">{{ item.stock }} units</span>
           </div>
           <div class="info-row">
             <span class="label"><span class="material-symbols-outlined">label</span> Type</span>
-            <span class="value">{{ item.foodType }}</span>
+            <span id="menu-manage-item-food-type-{{ i + 1 }}" class="value">{{ item.foodType }}</span>
           </div>
         </div>
 
         <div class="card-footer">
-          <button class="btn-icon btn-secondary" type="button" [disabled]="!canEditItem(item)" (click)="openEditForm(item)" title="Edit">
+          <button id="menu-manage-item-edit-btn-{{ i + 1 }}" class="btn-icon btn-secondary" type="button" [disabled]="!canEditItem(item)" (click)="openEditForm(item)" title="Edit">
             <span class="material-symbols-outlined">edit</span>
           </button>
-          <button class="btn-icon btn-toggle" type="button" [disabled]="!canEditItem(item)" (click)="toggleAvailability(item)" title="Toggle Availability">
-            <span class="material-symbols-outlined">{{ item.isAvailable ? 'check' : 'close' }}</span>
+          <button
+            id="menu-manage-item-toggle-btn-{{ i + 1 }}"
+            class="availability-toggle"
+            type="button"
+            [class.is-on]="item.isAvailable"
+            [attr.aria-pressed]="item.isAvailable"
+            [disabled]="!canEditItem(item)"
+            (click)="toggleAvailability(item)"
+            [title]="item.isAvailable ? 'Mark unavailable' : 'Mark available'"
+          >
+            <span class="toggle-track" aria-hidden="true">
+              <span class="toggle-thumb"></span>
+            </span>
+            <span class="toggle-label">{{ item.isAvailable ? 'Available' : 'Unavailable' }}</span>
           </button>
-          <button class="btn-icon btn-danger" type="button" [disabled]="!canDeleteItem(item)" (click)="deleteItem(item)" [title]="canDeleteItem(item) ? 'Delete' : 'Only admins can delete items'">
+          <button id="menu-manage-item-delete-btn-{{ i + 1 }}" class="btn-icon btn-danger" type="button" [disabled]="!canDeleteItem(item)" (click)="deleteItem(item)" [title]="canDeleteItem(item) ? 'Delete' : 'Only admins can delete items'">
             <span class="material-symbols-outlined">delete</span>
           </button>
         </div>
       </article>
     </section>
 
-    <section *ngIf="!isLoading && items.length > 0 && filteredItems.length === 0" class="empty-state">
+    <section id="menu-manage-filter-empty-state" *ngIf="!isLoading && items.length > 0 && filteredItems.length === 0" class="empty-state">
       <div class="empty-icon"><span class="material-symbols-outlined">search_off</span></div>
       <h2>No Items Match Filters</h2>
       <p>Try adjusting your filter criteria.</p>
@@ -129,6 +141,7 @@
   </div>
 
   <menu-item-form
+    id="menu-manage-item-form"
     *ngIf="showForm"
     [item]="selectedItem"
     [vendors]="vendors"

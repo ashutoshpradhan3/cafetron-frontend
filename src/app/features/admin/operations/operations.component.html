@@ -1,13 +1,13 @@
-<main class="ops-page">
-  <header class="page-header">
+<main id="admin-operations-page" class="ops-page">
+  <header id="admin-operations-header" class="page-header">
     <div>
       <p class="eyebrow">Admin</p>
       <h1 class="page-title">Operations</h1>
       <p class="page-sub">Control the ordering window and daily cutoff time.</p>
     </div>
     <div class="header-actions">
-      <a class="header-link" routerLink="/admin/vendors">Manage Vendors</a>
-      <div class="live-badge">
+      <a id="admin-operations-manage-vendors-link" class="header-link" routerLink="/admin/vendors">Manage Vendors</a>
+      <div id="admin-operations-live-badge" class="live-badge">
         <span class="live-dot"></span>
         Live
       </div>
@@ -19,6 +19,7 @@
   </header>
 
   <section
+    id="admin-operations-status-banner"
     class="status-banner"
     [class.banner-open]="orderingAllowed"
     [class.banner-closed]="!orderingAllowed"
@@ -36,15 +37,15 @@
         }}
       </strong>
       <span>
-        Cutoff: <b>{{ to12hr(status!.cutoffTime) }}</b>
-        <span class="tag-passed" *ngIf="status!.cutoffPassed">passed</span>
-        <span class="tag-ok" *ngIf="!status!.cutoffPassed">not reached</span>
+        Cutoff: <b id="admin-operations-banner-cutoff">{{ to12hr(status!.cutoffTime) }}</b>
+        <span id="admin-operations-banner-cutoff-passed" class="tag-passed" *ngIf="status!.cutoffPassed">passed</span>
+        <span id="admin-operations-banner-cutoff-ok" class="tag-ok" *ngIf="!status!.cutoffPassed">not reached</span>
       </span>
     </div>
   </section>
 
-  <section class="ops-grid">
-    <article class="ops-card">
+  <section id="admin-operations-grid" class="ops-grid">
+    <article id="admin-operations-window-card" class="ops-card">
       <div class="ops-card-top">
         <span class="ops-icon material-symbols-outlined">toggle_on</span>
         <div>
@@ -53,11 +54,12 @@
         </div>
       </div>
 
-      <div class="toggle-row" *ngIf="status">
-        <span class="toggle-label" [class.label-open]="status!.windowOpen">
+      <div id="admin-operations-window-toggle-row" class="toggle-row" *ngIf="status">
+        <span id="admin-operations-window-state" class="toggle-label" [class.label-open]="status!.windowOpen">
           {{ status!.windowOpen ? 'Open' : 'Closed' }}
         </span>
         <button
+          id="admin-operations-window-toggle-btn"
           class="toggle-btn"
           [class.toggle-on]="status!.windowOpen"
           (click)="toggleWindow()"
@@ -74,7 +76,7 @@
       </p>
     </article>
 
-    <article class="ops-card">
+    <article id="admin-operations-cutoff-card" class="ops-card">
       <div class="ops-card-top">
         <span class="ops-icon material-symbols-outlined">schedule</span>
         <div>
@@ -83,16 +85,16 @@
         </div>
       </div>
 
-      <div class="cutoff-form">
-        <label class="input-label">Set cutoff time</label>
+      <div id="admin-operations-cutoff-form" class="cutoff-form">
+        <label class="input-label" for="admin-operations-cutoff-input">Set cutoff time</label>
         <div class="cutoff-row">
-          <input type="time" [(ngModel)]="newCutoffTime" class="time-input" />
-          <button class="save-btn" (click)="saveCutoff()" [disabled]="!newCutoffTime || saving" type="button">
+          <input id="admin-operations-cutoff-input" type="time" [(ngModel)]="newCutoffTime" class="time-input" />
+          <button id="admin-operations-cutoff-save-btn" class="save-btn" (click)="saveCutoff()" [disabled]="!newCutoffTime || saving" type="button">
             {{ saving ? 'Saving...' : 'Update' }}
           </button>
         </div>
         <p class="current-val" *ngIf="status">
-          Current cutoff: <strong>{{ to12hr(status!.cutoffTime) }}</strong>
+          Current cutoff: <strong id="admin-operations-current-cutoff">{{ to12hr(status!.cutoffTime) }}</strong>
         </p>
         <p class="reset-note">
           Cutoff resets to <strong>03:00 PM</strong> every midnight. Changes here apply for today only.
@@ -101,38 +103,38 @@
     </article>
   </section>
 
-  <section class="status-table-card" *ngIf="status">
+  <section id="admin-operations-status-table-card" class="status-table-card" *ngIf="status">
     <h2 class="chart-title">System Status</h2>
     <div class="status-rows">
       <div class="status-row">
         <span class="status-key">Window toggle</span>
-        <span class="status-val" [class.val-green]="status!.windowOpen" [class.val-red]="!status!.windowOpen">
+        <span id="admin-operations-table-window-state" class="status-val" [class.val-green]="status!.windowOpen" [class.val-red]="!status!.windowOpen">
           {{ status!.windowOpen ? 'Open' : 'Closed' }}
         </span>
       </div>
 
       <div class="status-row">
         <span class="status-key">Cutoff time</span>
-        <span class="status-val">{{ to12hr(status!.cutoffTime) }}</span>
+        <span id="admin-operations-table-cutoff-time" class="status-val">{{ to12hr(status!.cutoffTime) }}</span>
       </div>
 
       <div class="status-row">
         <span class="status-key">Cutoff status</span>
-        <span class="status-val" [class.val-red]="status!.cutoffPassed" [class.val-green]="!status!.cutoffPassed">
+        <span id="admin-operations-table-cutoff-status" class="status-val" [class.val-red]="status!.cutoffPassed" [class.val-green]="!status!.cutoffPassed">
           {{ status!.cutoffPassed ? 'Passed' : 'Not reached' }}
         </span>
       </div>
 
       <div class="status-row">
         <span class="status-key">Ordering allowed</span>
-        <span class="status-val" [class.val-green]="orderingAllowed" [class.val-red]="!orderingAllowed">
+        <span id="admin-operations-table-ordering-allowed" class="status-val" [class.val-green]="orderingAllowed" [class.val-red]="!orderingAllowed">
           {{ orderingAllowed ? 'Yes' : 'No' }}
         </span>
       </div>
     </div>
   </section>
 
-  <div class="toast" [class.toast-visible]="!!toast" [class.toast-error]="toastType === 'error'">
+  <div id="admin-operations-toast" class="toast" [class.toast-visible]="!!toast" [class.toast-error]="toastType === 'error'">
     {{ toast }}
   </div>
 </main>

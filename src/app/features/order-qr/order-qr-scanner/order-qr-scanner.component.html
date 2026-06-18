@@ -1,79 +1,79 @@
-<section class="scanner-page">
-  <article class="scanner-card">
-    <header class="scanner-header">
+<section id="qr-scanner-page" class="scanner-page">
+  <article id="qr-scanner-card" class="scanner-card">
+    <header id="qr-scanner-header" class="scanner-header">
       <p class="eyebrow">Vendor scanner</p>
       <h1>Scan pickup QR</h1>
       <p>Validate an employee pickup code using the device camera.</p>
     </header>
 
-    <div class="scanner-actions">
-      <button class="btn btn-primary" (click)="startScanner()" [disabled]="scanning" type="button">
+    <div id="qr-scanner-actions" class="scanner-actions">
+      <button id="qr-scanner-start-btn" class="btn btn-primary" (click)="startScanner()" [disabled]="scanning" type="button">
         <span class="material-symbols-outlined">{{ scanning ? 'sync' : 'qr_code_scanner' }}</span>
         {{ scanning ? 'Scanning...' : 'Start Scanner' }}
       </button>
 
-      <button class="btn btn-secondary" (click)="stopCamera()" *ngIf="scanning" type="button">
+      <button id="qr-scanner-cancel-btn" class="btn btn-secondary" (click)="stopCamera()" *ngIf="scanning" type="button">
         <span class="material-symbols-outlined">close</span>
         Cancel
       </button>
     </div>
 
-    <div class="camera-frame" [class.is-active]="scanning">
-      <video #video autoplay playsinline muted [hidden]="!scanning"></video>
-      <canvas #canvas [hidden]="!scanning"></canvas>
-      <div class="camera-placeholder" *ngIf="!scanning">
+    <div id="qr-scanner-camera-frame" class="camera-frame" [class.is-active]="scanning">
+      <video id="qr-scanner-video" #video autoplay playsinline muted [hidden]="!scanning"></video>
+      <canvas id="qr-scanner-canvas" #canvas [hidden]="!scanning"></canvas>
+      <div id="qr-scanner-camera-placeholder" class="camera-placeholder" *ngIf="!scanning">
         <span class="material-symbols-outlined">qr_code_scanner</span>
         <p>Camera preview will appear here</p>
       </div>
     </div>
 
-    <p class="result" *ngIf="result">Decoded: {{ result }}</p>
-    <p class="error" *ngIf="error">{{ error }}</p>
+    <p id="qr-scanner-result" class="result" *ngIf="result">Decoded: {{ result }}</p>
+    <p id="qr-scanner-error" class="error" *ngIf="error">{{ error }}</p>
 
-    <section class="preview-card" *ngIf="isLoadingPreview || orderPreview">
-      <div *ngIf="isLoadingPreview" class="preview-loading">
+    <section id="qr-scanner-preview-card" class="preview-card" *ngIf="isLoadingPreview || orderPreview">
+      <div id="qr-scanner-preview-loading" *ngIf="isLoadingPreview" class="preview-loading">
         <div class="spinner"></div>
         <p>Loading order details...</p>
       </div>
 
       <ng-container *ngIf="!isLoadingPreview && orderPreview as order">
-        <header class="preview-header">
+        <header id="qr-scanner-preview-header" class="preview-header">
           <div>
             <p class="eyebrow">Order preview</p>
-            <h2>Order #{{ order.orderId }}</h2>
+            <h2 id="qr-scanner-preview-order-id">Order #{{ order.orderId }}</h2>
           </div>
-          <span class="status-pill">{{ order.overallStatus }}</span>
+          <span id="qr-scanner-preview-status" class="status-pill">{{ order.overallStatus }}</span>
         </header>
 
-        <div class="preview-summary">
+        <div id="qr-scanner-preview-summary" class="preview-summary">
           <div>
             <span>Pickup</span>
-            <strong>{{ order.pickupSlot || 'Slot pending' }}</strong>
+            <strong id="qr-scanner-preview-pickup-slot">{{ order.pickupSlot || 'Slot pending' }}</strong>
           </div>
           <div>
             <span>Items</span>
-            <strong>{{ getPreviewTotalItems() }}</strong>
+            <strong id="qr-scanner-preview-total-items">{{ getPreviewTotalItems() }}</strong>
           </div>
           <div>
             <span>Total</span>
-            <strong>${{ order.totalAmount | number: '1.2-2' }}</strong>
+            <strong id="qr-scanner-preview-total">${{ order.totalAmount | number: '1.2-2' }}</strong>
           </div>
         </div>
 
-        <div class="preview-empty" *ngIf="order.items.length === 0">
+        <div id="qr-scanner-preview-empty-state" class="preview-empty" *ngIf="order.items.length === 0">
           <span class="material-symbols-outlined">inventory_2</span>
           <p>This QR is valid, but this order has no items assigned to your vendor account.</p>
         </div>
 
-        <div class="preview-items" *ngIf="order.items.length > 0">
-          <article *ngFor="let item of order.items" class="preview-item">
+        <div id="qr-scanner-preview-items" class="preview-items" *ngIf="order.items.length > 0">
+          <article *ngFor="let item of order.items; let i = index" id="qr-scanner-preview-item-{{ i + 1 }}" class="preview-item">
             <div>
-              <h3>{{ item.itemName }}</h3>
-              <p>{{ item.vendorStatus }}</p>
+              <h3 id="qr-scanner-preview-item-name-{{ i + 1 }}">{{ item.itemName }}</h3>
+              <p id="qr-scanner-preview-item-status-{{ i + 1 }}">{{ item.vendorStatus }}</p>
             </div>
             <div class="preview-item-meta">
-              <span>Qty {{ item.quantity }}</span>
-              <strong>${{ getLineTotal(item.unitPrice, item.quantity) | number: '1.2-2' }}</strong>
+              <span id="qr-scanner-preview-item-qty-{{ i + 1 }}">Qty {{ item.quantity }}</span>
+              <strong id="qr-scanner-preview-item-total-{{ i + 1 }}">${{ getLineTotal(item.unitPrice, item.quantity) | number: '1.2-2' }}</strong>
             </div>
           </article>
         </div>

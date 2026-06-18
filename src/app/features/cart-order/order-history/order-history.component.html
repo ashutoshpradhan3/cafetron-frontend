@@ -1,41 +1,42 @@
-<main class="orders-page">
+<main id="orders-page" class="orders-page">
   <header class="app-topbar">
     <div class="brand-lockup">
       <span class="material-symbols-outlined">restaurant</span>
       <span>Cafetron</span>
     </div>
-    <div class="wallet-pill">
+    <div id="orders-wallet-pill" class="wallet-pill">
       <span>{{ getWalletLabel() }}</span>
       <span class="profile-dot">D</span>
     </div>
   </header>
 
-  <section class="orders-shell">
+  <section id="orders-shell" class="orders-shell">
     <div class="page-title-block">
       <h1>Order History</h1>
       <p>Track your recent and past meals.</p>
     </div>
 
-    <div *ngIf="errorMessage" class="alert alert-error">
+    <div id="orders-error-alert" *ngIf="errorMessage" class="alert alert-error">
       <span class="material-symbols-outlined">error</span>
       <span>{{ errorMessage }}</span>
     </div>
 
-    <section *ngIf="isLoading" class="state-card">
+    <section id="orders-loading-state" *ngIf="isLoading" class="state-card">
       <div class="spinner"></div>
       <p>Loading your orders...</p>
     </section>
 
-    <section *ngIf="!isLoading && orders.length === 0" class="state-card empty-state">
+    <section id="orders-empty-state" *ngIf="!isLoading && orders.length === 0" class="state-card empty-state">
       <span class="material-symbols-outlined">restaurant_menu</span>
       <h2>No orders yet</h2>
       <p>Your meals will appear here once you place an order.</p>
-      <a routerLink="/menu">Start ordering</a>
+      <a id="orders-start-ordering-link" routerLink="/menu">Start ordering</a>
     </section>
 
-    <section *ngIf="!isLoading && orders.length > 0" class="orders-list">
+    <section id="orders-list" *ngIf="!isLoading && orders.length > 0" class="orders-list">
       <article
-        *ngFor="let order of orders; let first = first"
+        *ngFor="let order of orders; let first = first; let i = index"
+        id="orders-card-{{ i + 1 }}"
         class="order-card"
         [class.current]="first"
         tabindex="0"
@@ -44,26 +45,26 @@
       >
         <div class="order-top">
           <div>
-            <span *ngIf="first" class="current-label">Current Order</span>
-            <h2>Order #{{ order.orderId }}</h2>
+            <span id="orders-current-label-{{ i + 1 }}" *ngIf="first" class="current-label">Current Order</span>
+            <h2 id="orders-order-id-{{ i + 1 }}">Order #{{ order.orderId }}</h2>
           </div>
-          <span [ngClass]="getStatusColor(order.overallStatus)" class="status-badge">
+          <span id="orders-status-{{ i + 1 }}" [ngClass]="getStatusColor(order.overallStatus)" class="status-badge">
             {{ order.overallStatus }}
           </span>
         </div>
 
         <div class="order-body">
-          <p>{{ order.location || 'Cafeteria counter' }} pickup at {{ order.pickupSlot }}</p>
-          <span>{{ order.createdAt | date: 'mediumDate' }}</span>
+          <p id="orders-location-slot-{{ i + 1 }}">{{ order.location || 'Cafeteria counter' }} pickup at {{ order.pickupSlot }}</p>
+          <span id="orders-created-at-{{ i + 1 }}">{{ order.createdAt | date: 'mediumDate' }}</span>
         </div>
 
         <div class="order-bottom">
-          <strong>${{ order.totalAmount | number: '1.2-2' }}</strong>
+          <strong id="orders-total-{{ i + 1 }}">${{ order.totalAmount | number: '1.2-2' }}</strong>
           <span class="material-symbols-outlined">arrow_forward</span>
         </div>
       </article>
 
-      <div class="end-state">
+      <div id="orders-end-state" class="end-state">
         <span class="material-symbols-outlined">restaurant_menu</span>
         <p>End of history</p>
       </div>

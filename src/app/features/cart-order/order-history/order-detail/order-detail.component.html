@@ -1,89 +1,121 @@
-<main class="detail-page">
+<main id="order-detail-page" class="detail-page">
   <header class="app-topbar">
     <div class="topbar-left">
-      <button class="icon-btn" (click)="goBack()" type="button" aria-label="Back">
+      <button id="order-detail-back-btn" class="icon-btn" (click)="goBack()" type="button" aria-label="Back">
         <span class="material-symbols-outlined">arrow_back</span>
       </button>
       <h1>{{ order ? 'Order #' + order.orderId : 'Order Details' }}</h1>
     </div>
-    <div class="wallet-pill" *ngIf="order">
+    <div id="order-detail-payment-status-pill" class="wallet-pill" *ngIf="order">
       <span>{{ order.paymentStatus }}</span>
     </div>
   </header>
 
-  <section class="detail-shell">
-    <div *ngIf="errorMessage" class="alert alert-error">
+  <section id="order-detail-shell" class="detail-shell">
+    <div id="order-detail-error-alert" *ngIf="errorMessage" class="alert alert-error">
       <span class="material-symbols-outlined">error</span>
       <span>{{ errorMessage }}</span>
     </div>
 
-    <section *ngIf="isLoading" class="state-card">
+    <section id="order-detail-loading-state" *ngIf="isLoading" class="state-card">
       <div class="spinner"></div>
       <p>Loading order details...</p>
     </section>
 
     <ng-container *ngIf="!isLoading && order">
-      <section class="hero-card">
-        <span [ngClass]="getStatusColor(order.overallStatus)" class="status-badge">{{ order.overallStatus }}</span>
-        <h2>${{ order.totalAmount | number: '1.2-2' }}</h2>
-        <p>{{ order.location || 'Cafeteria counter' }} pickup at {{ order.pickupSlot }}</p>
+      <section id="order-detail-hero-card" class="hero-card">
+        <span id="order-detail-status" [ngClass]="getStatusColor(order.overallStatus)" class="status-badge">{{ order.overallStatus }}</span>
+        <h2 id="order-detail-total">${{ order.totalAmount | number: '1.2-2' }}</h2>
+        <p id="order-detail-location-slot">{{ order.location || 'Cafeteria counter' }} pickup at {{ order.pickupSlot }}</p>
       </section>
 
-      <section class="section-card">
+      <section id="order-detail-collection-card" class="section-card">
         <h2>Collection Details</h2>
         <dl class="detail-list">
           <div>
             <dt>Order ID</dt>
-            <dd>#{{ order.orderId }}</dd>
+            <dd id="order-detail-order-id">#{{ order.orderId }}</dd>
           </div>
           <div>
             <dt>Order Date</dt>
-            <dd>{{ order.createdAt | date: 'medium' }}</dd>
+            <dd id="order-detail-created-at">{{ order.createdAt | date: 'medium' }}</dd>
           </div>
           <div>
             <dt>Payment</dt>
-            <dd>{{ order.paymentStatus }}</dd>
+            <dd id="order-detail-payment-status">{{ order.paymentStatus }}</dd>
           </div>
         </dl>
       </section>
 
-      <section class="section-card">
+      <section id="order-detail-items-card" class="section-card">
         <div class="section-title-row">
           <span class="material-symbols-outlined">shopping_bag</span>
           <h2>Items</h2>
         </div>
 
         <div class="item-list">
-          <article *ngFor="let item of order.items" class="item-card">
+          <article *ngFor="let item of order.items; let i = index" id="order-detail-item-card-{{ i + 1 }}" class="item-card">
             <div>
-              <h3>{{ item.itemName }}</h3>
-              <p>Qty {{ item.quantity }} x ${{ item.unitPrice | number: '1.2-2' }}</p>
-              <span [ngClass]="getVendorStatusColor(item.vendorStatus)" class="vendor-badge">
+              <h3 id="order-detail-item-name-{{ i + 1 }}">{{ item.itemName }}</h3>
+              <p id="order-detail-item-quantity-price-{{ i + 1 }}">Qty {{ item.quantity }} x ${{ item.unitPrice | number: '1.2-2' }}</p>
+              <span id="order-detail-item-vendor-status-{{ i + 1 }}" [ngClass]="getVendorStatusColor(item.vendorStatus)" class="vendor-badge">
                 {{ item.vendorStatus }}
               </span>
             </div>
-            <strong>${{ (item.quantity * item.unitPrice) | number: '1.2-2' }}</strong>
+            <strong id="order-detail-item-total-{{ i + 1 }}">${{ (item.quantity * item.unitPrice) | number: '1.2-2' }}</strong>
           </article>
         </div>
       </section>
 
       <!-- QR Code Section -->
-      <div *ngIf="order.qrToken" class="section qr-section">
+      <div
+        id="order-detail-qr-section"
+        *ngIf="order.qrToken"
+        class="section qr-section"
+        [class.qr-section-disabled]="isOrderClosed()"
+      >
         <h2 class="section-title">📲 Pickup QR Code</h2>
-        <div class="qr-content">
+        <div class="qr-content" *ngIf="!isOrderClosed(); else disabledQr">
           <p class="qr-description">Show this QR code at pickup</p>
           <!-- <div class="qr-token">{{ order.qrToken }}</div> -->
-           <div class="qr-token"><order-qr-display [orderId]="order.orderId" /></div>
+           <div id="order-detail-qr-token" class="qr-token"><order-qr-display id="order-detail-qr-display" [orderId]="order.orderId" /></div>
         </div>
+        <ng-template #disabledQr>
+          <div id="order-detail-qr-disabled-message" class="qr-disabled-message">
+            <span class="material-symbols-outlined">block</span>
+            <p>Pickup QR is disabled because this order is cancelled.</p>
+          </div>
+        </ng-template>
         <!-- <code>{{ order.qrToken }}</code> -->
-        <a class="qr-view-btn" [routerLink]="['/pickup/qr', order.orderId]">
+        <a
+          id="order-detail-qr-view-link"
+          *ngIf="!isOrderClosed()"
+          class="qr-view-btn"
+          [routerLink]="['/pickup/qr', order.orderId]"
+        >
           <span class="material-symbols-outlined">qr_code_2</span>
           View Pickup QR
         </a>
+        <button
+          id="order-detail-qr-view-disabled-btn"
+          *ngIf="isOrderClosed()"
+          class="qr-view-btn qr-view-btn-disabled"
+          type="button"
+          disabled
+        >
+          <span class="material-symbols-outlined">qr_code_2</span>
+          Pickup QR Disabled
+        </button>
       </div>
 
-      <button class="timeout-btn" (click)="onProcessTimeout()" [disabled]="isProcessingTimeout" type="button">
-        {{ isProcessingTimeout ? 'Processing...' : 'Request Timeout' }}
+      <button
+        id="order-detail-timeout-btn"
+        class="timeout-btn"
+        (click)="onProcessTimeout()"
+        [disabled]="isProcessingTimeout || isOrderClosed()"
+        type="button"
+      >
+        {{ getTimeoutButtonLabel() }}
       </button>
     </ng-container>
   </section>

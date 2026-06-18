@@ -210,6 +210,12 @@ h4 {
   background: rgba(80, 61, 52, 0.62);
 }
 
+.step-tabs button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  transform: none;
+}
+
 .step-tabs .material-symbols-outlined {
   font-size: 20px;
 }
@@ -254,8 +260,8 @@ h4 {
 .active-card {
   position: relative;
   z-index: 2;
-  display: grid;
-  grid-template-rows: auto auto 1fr auto;
+  display: flex;
+  flex-direction: column;
   gap: 16px;
   padding: clamp(20px, 3vw, 30px);
   animation: cardIn 220ms ease both;
@@ -337,7 +343,7 @@ h4 {
   border: 1px solid rgba(255, 255, 255, 0.58);
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.16);
-  color: #fff;
+  color: orange;
   cursor: pointer;
   -webkit-backdrop-filter: blur(16px) saturate(1.12);
   backdrop-filter: blur(16px) saturate(1.12);
@@ -392,6 +398,11 @@ h4 {
   display: grid;
   gap: 12px;
   align-content: start;
+}
+
+.active-card .food-preview-list {
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .compact-list {
@@ -580,7 +591,9 @@ h4 {
 }
 
 .place-btn {
-  width: 100%;
+  width: min(100%, 360px);
+  margin: 18px auto 0;
+  padding: 0 18px;
   border: 0;
   background: var(--primary-action);
   color: #fff;
@@ -608,6 +621,8 @@ h4 {
   justify-content: space-between;
   gap: 12px;
   min-width: 0;
+  margin-top: auto;
+  padding-top: 12px;
 }
 
 .nav-btn {
@@ -745,6 +760,7 @@ h4 {
 
 .overview-card .place-btn {
   min-height: 46px;
+  justify-self: center;
 }
 
 @keyframes cardIn {

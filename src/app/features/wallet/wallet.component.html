@@ -1,65 +1,66 @@
-<main class="wallet-page">
-  <section class="wallet-card">
+<main id="wallet-page" class="wallet-page">
+  <section id="wallet-card" class="wallet-card">
     <header class="header">
       <p class="eyebrow">Wallet</p>
       <h1>My Wallet</h1>
       <p>View balance, top up, and review recent wallet activity.</p>
     </header>
 
-    <div *ngIf="isLoadingWallet" class="state">Loading wallet...</div>
-    <div *ngIf="errorMessage" class="state error">{{ errorMessage }}</div>
-    <div *ngIf="successMessage" class="state success">{{ successMessage }}</div>
+    <div id="wallet-loading-state" *ngIf="isLoadingWallet" class="state">Loading wallet...</div>
+    <div id="wallet-error-message" *ngIf="errorMessage" class="state error">{{ errorMessage }}</div>
+    <div id="wallet-success-message" *ngIf="successMessage" class="state success">{{ successMessage }}</div>
 
     <ng-container *ngIf="!isLoadingWallet && wallet as currentWallet">
-      <section class="balance-card">
+      <section id="wallet-balance-card" class="balance-card">
         <div>
           <span class="label">Available balance</span>
-          <strong class="balance">{{ currentWallet.balance | currency:'INR' }}</strong>
+          <strong id="wallet-balance-value" class="balance">{{ currentWallet.balance | currency:'INR' }}</strong>
         </div>
         <div class="meta-grid">
-          <p><span>Wallet ID</span>{{ currentWallet.walletId }}</p>
-          <p><span>User ID</span>{{ currentWallet.userId }}</p>
-          <p><span>Updated</span>{{ currentWallet.updatedAt }}</p>
+          <p id="wallet-id-field"><span>Wallet ID</span>{{ currentWallet.walletId }}</p>
+          <p id="wallet-user-id-field"><span>User ID</span>{{ currentWallet.userId }}</p>
+          <p id="wallet-updated-at-field"><span>Updated</span>{{ currentWallet.updatedAt }}</p>
         </div>
       </section>
 
-      <section class="topup-card">
+      <section id="wallet-topup-card" class="topup-card">
         <h2>Top Up Wallet</h2>
         <div class="topup-row">
           <input
+            id="wallet-topup-amount-input"
             type="number"
             min="1"
             step="0.01"
             [(ngModel)]="topUpAmount"
             placeholder="Enter amount"
           />
-          <button type="button" (click)="submitTopUp()" [disabled]="isSaving">
+          <button id="wallet-topup-submit-btn" type="button" (click)="submitTopUp()" [disabled]="isSaving">
             {{ isSaving ? 'Saving...' : 'Top Up' }}
           </button>
         </div>
       </section>
     </ng-container>
 
-    <section class="transactions-card">
+    <section id="wallet-transactions-card" class="transactions-card">
       <div class="section-heading">
         <h2>Transactions</h2>
       </div>
 
-      <div *ngIf="isLoadingTransactions" class="state">Loading transactions...</div>
+      <div id="wallet-transactions-loading-state" *ngIf="isLoadingTransactions" class="state">Loading transactions...</div>
 
-      <div *ngIf="!isLoadingTransactions && transactions?.transactions?.length === 0" class="state">
+      <div id="wallet-transactions-empty-state" *ngIf="!isLoadingTransactions && transactions?.transactions?.length === 0" class="state">
         No transactions found.
       </div>
 
-      <div *ngIf="transactions as transactionPage" class="transaction-list">
-        <article *ngFor="let tx of transactionPage.transactions" class="transaction-item">
+      <div id="wallet-transaction-list" *ngIf="transactions as transactionPage" class="transaction-list">
+        <article *ngFor="let tx of transactionPage.transactions; let i = index" id="wallet-transaction-item-{{ i + 1 }}" class="transaction-item">
           <div>
-            <strong>{{ tx.type }}</strong>
-            <p>{{ tx.description }}</p>
+            <strong id="wallet-transaction-type-{{ i + 1 }}">{{ tx.type }}</strong>
+            <p id="wallet-transaction-description-{{ i + 1 }}">{{ tx.description }}</p>
           </div>
-          <div class="tx-right">
-            <span>{{ tx.amount | currency:'INR' }}</span>
-            <small>{{ tx.createdAt }}</small>
+          <div id="wallet-transaction-meta-{{ i + 1 }}" class="tx-right">
+            <span id="wallet-transaction-amount-{{ i + 1 }}">{{ tx.amount | currency:'INR' }}</span>
+            <small id="wallet-transaction-created-at-{{ i + 1 }}">{{ tx.createdAt }}</small>
           </div>
         </article>
       </div>

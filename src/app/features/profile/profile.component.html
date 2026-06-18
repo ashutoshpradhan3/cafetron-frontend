@@ -1,35 +1,35 @@
-<main class="profile-page">
+<main id="profile-page" class="profile-page">
   <header class="app-topbar">
     <div class="topbar-left">
-      <button class="icon-btn" routerLink="/menu" type="button" aria-label="Back to menu">
+      <button id="profile-back-to-menu-btn" class="icon-btn" routerLink="/menu" type="button" aria-label="Back to menu">
         <span class="material-symbols-outlined">arrow_back</span>
       </button>
       <h1>Profile</h1>
     </div>
-    <button class="logout-pill" type="button" (click)="logout()">
+    <button id="profile-logout-btn" class="logout-pill" type="button" (click)="logout()">
       <span class="material-symbols-outlined">logout</span>
       Logout
     </button>
   </header>
 
-  <section class="profile-shell">
-    <div *ngIf="isLoading" class="state-card">
+  <section id="profile-shell" class="profile-shell">
+    <div id="profile-loading-state" *ngIf="isLoading" class="state-card">
       <div class="spinner"></div>
       <p>Loading profile...</p>
     </div>
 
-    <div *ngIf="errorMessage" class="alert alert-error">
+    <div id="profile-error-alert" *ngIf="errorMessage" class="alert alert-error">
       <span class="material-symbols-outlined">error</span>
       <span>{{ errorMessage }}</span>
     </div>
 
-    <article *ngIf="!isLoading && profile as user" class="profile-card">
+    <article id="profile-card" *ngIf="!isLoading && profile as user" class="profile-card">
       <div class="profile-hero">
-        <div class="avatar">{{ getInitials() }}</div>
+        <div id="profile-avatar" class="avatar">{{ getInitials() }}</div>
         <div>
           <p class="eyebrow">Signed in as</p>
-          <h2>{{ user.name }}</h2>
-          <p>{{ user.email }}</p>
+          <h2 id="profile-name">{{ user.name }}</h2>
+          <p id="profile-email">{{ user.email }}</p>
         </div>
       </div>
 
@@ -37,55 +37,55 @@
         <div class="detail-tile">
           <span class="material-symbols-outlined">badge</span>
           <p>Employee ID</p>
-          <strong>{{ user.employeeId || 'Not set' }}</strong>
+          <strong id="profile-employee-id">{{ user.employeeId || 'Not set' }}</strong>
         </div>
         <div class="detail-tile">
           <span class="material-symbols-outlined">apartment</span>
           <p>Department</p>
-          <strong>{{ user.department || 'Not set' }}</strong>
+          <strong id="profile-department">{{ user.department || 'Not set' }}</strong>
         </div>
         <div class="detail-tile">
           <span class="material-symbols-outlined">verified_user</span>
           <p>Role</p>
-          <strong>{{ getDisplayRole(user.role) }}</strong>
+          <strong id="profile-role">{{ getDisplayRole(user.role) }}</strong>
         </div>
         <div class="detail-tile">
           <span class="material-symbols-outlined">tag</span>
           <p>User ID</p>
-          <strong>{{ user.id }}</strong>
+          <strong id="profile-user-id">{{ user.id }}</strong>
         </div>
       </section>
 
-      <nav class="profile-actions">
-        <a *ngIf="!isVendorProfile()" routerLink="/menu">
+      <nav id="profile-actions" class="profile-actions">
+        <a id="profile-menu-link" *ngIf="!isVendorProfile()" routerLink="/menu">
           <span class="material-symbols-outlined">restaurant_menu</span>
           Menu
         </a>
-        <a *ngIf="!isVendorProfile()" routerLink="/cart">
+        <a id="profile-cart-link" *ngIf="!isVendorProfile()" routerLink="/cart">
           <span class="material-symbols-outlined">shopping_cart</span>
           Cart
         </a>
-        <a *ngIf="!isVendorProfile()" routerLink="/orders">
+        <a id="profile-orders-link" *ngIf="!isVendorProfile()" routerLink="/orders">
           <span class="material-symbols-outlined">receipt_long</span>
           Orders
         </a>
-        <a *ngIf="!isVendorProfile()" routerLink="/wallet">
+        <a id="profile-wallet-link" *ngIf="!isVendorProfile()" routerLink="/wallet">
           <span class="material-symbols-outlined">account_balance_wallet</span>
           Wallet
         </a>
-        <a *ngIf="isVendorProfile()" routerLink="/vendor/orders">
+        <a id="profile-vendor-orders-link" *ngIf="isVendorProfile()" routerLink="/vendor/orders">
           <span class="material-symbols-outlined">room_service</span>
           Orders
         </a>
-        <a *ngIf="isVendorProfile()" routerLink="/menu/manage">
+        <a id="profile-vendor-manage-link" *ngIf="isVendorProfile()" routerLink="/menu/manage">
           <span class="material-symbols-outlined">edit_note</span>
           Manage
         </a>
-        <a *ngIf="isVendorProfile()" routerLink="/vendor/scanner">
+        <a id="profile-vendor-scanner-link" *ngIf="isVendorProfile()" routerLink="/vendor/scanner">
           <span class="material-symbols-outlined">qr_code_scanner</span>
           Scanner
         </a>
-        <a *ngIf="isVendorProfile()" routerLink="/vendor/queue">
+        <a id="profile-vendor-queue-link" *ngIf="isVendorProfile()" routerLink="/vendor/queue">
           <span class="material-symbols-outlined">groups</span>
           Queue
         </a>

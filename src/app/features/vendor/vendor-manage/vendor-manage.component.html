@@ -1,12 +1,12 @@
-<main class="vendor-manage-wrapper">
-  <div class="vendor-manage-container">
-    <section class="page-header">
+<main id="vendor-manage-page" class="vendor-manage-wrapper">
+  <div id="vendor-manage-container" class="vendor-manage-container">
+    <section id="vendor-manage-header" class="page-header">
       <div>
         <p class="eyebrow">Vendor network</p>
         <h1>Manage Vendors</h1>
         <p class="subtitle">Manage vendor accounts, status, and contact details.</p>
       </div>
-      <button class="btn btn-primary" (click)="openCreateForm()">
+      <button id="vendor-manage-add-vendor-btn" class="btn btn-primary" (click)="openCreateForm()">
         <span class="material-symbols-outlined">add_business</span>
         Add Vendor
       </button>
@@ -15,51 +15,51 @@
       </svg>
     </section>
 
-    <div *ngIf="errorMessage" class="alert alert-error">
+    <div id="vendor-manage-error-alert" *ngIf="errorMessage" class="alert alert-error">
       <span class="material-symbols-outlined">error</span>
       <span>{{ errorMessage }}</span>
     </div>
 
-    <div *ngIf="toast" [ngClass]="{'toast': true, 'toast-success': toastType === 'success', 'toast-error': toastType === 'error'}">
+    <div id="vendor-manage-toast" *ngIf="toast" [ngClass]="{'toast': true, 'toast-success': toastType === 'success', 'toast-error': toastType === 'error'}">
       {{ toast }}
     </div>
 
-    <section class="filter-bar" *ngIf="!isLoading && vendors.length > 0">
+    <section id="vendor-manage-filter-bar" class="filter-bar" *ngIf="!isLoading && vendors.length > 0">
       <div class="filter-group">
         <label>Status</label>
-        <select [(ngModel)]="filterStatus" (change)="onFilterChange()">
+        <select id="vendor-manage-status-filter-select" [(ngModel)]="filterStatus" (change)="onFilterChange()">
           <option value="all">All Vendors</option>
           <option value="active">Active Only</option>
           <option value="inactive">Inactive Only</option>
         </select>
       </div>
 
-      <div class="filter-info">Showing {{ filteredVendors.length }} of {{ vendors.length }} vendors</div>
+      <div id="vendor-manage-filter-info" class="filter-info">Showing {{ filteredVendors.length }} of {{ vendors.length }} vendors</div>
     </section>
 
-    <section *ngIf="isLoading" class="loading-state">
+    <section id="vendor-manage-loading-state" *ngIf="isLoading" class="loading-state">
       <div class="spinner"></div>
       <p>Loading vendors...</p>
     </section>
 
-    <section *ngIf="!isLoading && vendors.length === 0" class="empty-state">
+    <section id="vendor-manage-empty-state" *ngIf="!isLoading && vendors.length === 0" class="empty-state">
       <div class="empty-icon"><span class="material-symbols-outlined">storefront</span></div>
       <h2>No Vendors Yet</h2>
       <p>Create your first vendor to get started.</p>
-      <button class="btn btn-primary" (click)="openCreateForm()">Create Vendor</button>
+      <button id="vendor-manage-create-empty-btn" class="btn btn-primary" (click)="openCreateForm()">Create Vendor</button>
     </section>
 
-    <section *ngIf="!isLoading && filteredVendors.length > 0" class="vendors-grid">
-      <article *ngFor="let vendor of filteredVendors" class="vendor-card">
+    <section id="vendor-manage-vendors-grid" *ngIf="!isLoading && filteredVendors.length > 0" class="vendors-grid">
+      <article *ngFor="let vendor of filteredVendors; let i = index" id="vendor-manage-card-{{ i + 1 }}" class="vendor-card">
         <div class="card-header">
           <div class="vendor-title">
             <span class="material-symbols-outlined">storefront</span>
             <div>
-              <h3>{{ vendor.name }}</h3>
-              <p class="vendor-email">{{ vendor.email }}</p>
+              <h3 id="vendor-manage-name-{{ i + 1 }}">{{ vendor.name }}</h3>
+              <p id="vendor-manage-email-summary-{{ i + 1 }}" class="vendor-email">{{ vendor.email }}</p>
             </div>
           </div>
-          <span [ngClass]="getStatusClass(vendor.isActive)" class="status-badge">
+          <span id="vendor-manage-status-{{ i + 1 }}" [ngClass]="getStatusClass(vendor.isActive)" class="status-badge">
             {{ vendor.isActive ? 'Active' : 'Inactive' }}
           </span>
         </div>
@@ -67,37 +67,37 @@
         <div class="card-body">
           <div class="info-row">
             <span class="label"><span class="material-symbols-outlined">mail</span> Email</span>
-            <span class="value">{{ vendor.email }}</span>
+            <span id="vendor-manage-email-{{ i + 1 }}" class="value">{{ vendor.email }}</span>
           </div>
           <div class="info-row" *ngIf="vendor.phone">
             <span class="label"><span class="material-symbols-outlined">call</span> Phone</span>
-            <span class="value">{{ vendor.phone }}</span>
+            <span id="vendor-manage-phone-{{ i + 1 }}" class="value">{{ vendor.phone }}</span>
           </div>
           <div class="info-row" *ngIf="vendor.contactPerson">
             <span class="label"><span class="material-symbols-outlined">person</span> Contact</span>
-            <span class="value">{{ vendor.contactPerson }}</span>
+            <span id="vendor-manage-contact-{{ i + 1 }}" class="value">{{ vendor.contactPerson }}</span>
           </div>
           <div class="info-row">
             <span class="label"><span class="material-symbols-outlined">calendar_month</span> Created</span>
-            <span class="value">{{ vendor.createdAt | date: 'short' }}</span>
+            <span id="vendor-manage-created-at-{{ i + 1 }}" class="value">{{ vendor.createdAt | date: 'short' }}</span>
           </div>
         </div>
 
         <div class="card-footer">
-          <button class="btn-icon btn-secondary" (click)="openEditForm(vendor)" title="Edit">
+          <button id="vendor-manage-edit-btn-{{ i + 1 }}" class="btn-icon btn-secondary" (click)="openEditForm(vendor)" title="Edit">
             <span class="material-symbols-outlined">edit</span>
           </button>
-          <button class="btn-icon btn-toggle" (click)="toggleActive(vendor)" title="Toggle Status">
+          <button id="vendor-manage-toggle-btn-{{ i + 1 }}" class="btn-icon btn-toggle" (click)="toggleActive(vendor)" title="Toggle Status">
             <span class="material-symbols-outlined">{{ vendor.isActive ? 'check' : 'close' }}</span>
           </button>
-          <button class="btn-icon btn-danger" (click)="deleteVendor(vendor)" title="Delete">
+          <button id="vendor-manage-delete-btn-{{ i + 1 }}" class="btn-icon btn-danger" (click)="deleteVendor(vendor)" title="Delete">
             <span class="material-symbols-outlined">delete</span>
           </button>
         </div>
       </article>
     </section>
 
-    <section *ngIf="!isLoading && vendors.length > 0 && filteredVendors.length === 0" class="empty-state">
+    <section id="vendor-manage-filter-empty-state" *ngIf="!isLoading && vendors.length > 0 && filteredVendors.length === 0" class="empty-state">
       <div class="empty-icon"><span class="material-symbols-outlined">search_off</span></div>
       <h2>No Vendors Match Filters</h2>
       <p>Try adjusting your filter criteria.</p>
@@ -105,6 +105,7 @@
   </div>
 
   <vendor-form
+    id="vendor-manage-form"
     *ngIf="showForm"
     [vendor]="selectedVendor"
     (close)="closeForm()"

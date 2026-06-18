@@ -1,5 +1,5 @@
-<main class="auth-page">
-  <section class="auth-shell">
+<main id="login-page" class="auth-page">
+  <section id="login-shell" class="auth-shell">
     <aside class="auth-art" aria-hidden="true">
       <p class="eyebrow">Cafetron</p>
       <h1>Fresh meals, fast pickup.</h1>
@@ -11,7 +11,7 @@
       </svg>
     </aside>
 
-    <section class="auth-card">
+    <section id="login-card" class="auth-card">
       <div class="brand-mark">
         <span class="material-symbols-outlined">restaurant</span>
       </div>
@@ -19,12 +19,12 @@
       <h2>Sign in</h2>
       <p class="subtitle">Use your employee account to continue.</p>
 
-      <form (ngSubmit)="onSubmit()">
+      <form id="login-form" (ngSubmit)="onSubmit()">
         <div class="form-group">
           <label for="employeeId">Employee ID</label>
           <div class="input-shell">
             <span class="material-symbols-outlined">badge</span>
-            <input id="employeeId" type="text" [(ngModel)]="credentials.employeeId" name="employeeId"
+            <input id="login-employee-id-input" type="text" [(ngModel)]="credentials.employeeId" name="employeeId"
               placeholder="e.g. EMP001" required />
           </div>
         </div>
@@ -33,17 +33,17 @@
           <label for="password">Password</label>
           <div class="input-shell">
             <span class="material-symbols-outlined">lock</span>
-            <input id="password" type="password" [(ngModel)]="credentials.password" name="password"
+            <input id="login-password-input" type="password" [(ngModel)]="credentials.password" name="password"
               placeholder="Enter your password" required />
           </div>
         </div>
 
-        <div class="error-message" *ngIf="errorMessage">
+        <div id="login-error-message" class="error-message" *ngIf="errorMessage">
           <span class="material-symbols-outlined">error</span>
           {{ errorMessage }}
         </div>
 
-        <button type="submit" [disabled]="isLoading">
+        <button id="login-submit-btn" type="submit" [disabled]="isLoading">
           <span>{{ isLoading ? 'Signing in...' : 'Sign In' }}</span>
           <span class="material-symbols-outlined">arrow_forward</span>
         </button>
@@ -51,7 +51,7 @@
 
       <p class="register-link">
         Don't have an account?
-        <a routerLink="/register">Register</a>
+        <a id="login-register-link" routerLink="/register">Register</a>
       </p>
     </section>
   </section>

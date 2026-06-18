@@ -1,47 +1,47 @@
-<div class="form-modal-overlay" (click)="onCancel()">
-  <div class="form-modal" (click)="$event.stopPropagation()">
-    <div class="modal-header">
+<div id="vendor-form-overlay" class="form-modal-overlay" (click)="onCancel()">
+  <div id="vendor-form-modal" class="form-modal" (click)="$event.stopPropagation()">
+    <div id="vendor-form-header" class="modal-header">
       <h2>
         <span class="material-symbols-outlined">storefront</span>
         {{ vendor ? 'Edit Vendor' : 'Create New Vendor' }}
       </h2>
-      <button class="close-btn" (click)="onCancel()" type="button" aria-label="Close">
+      <button id="vendor-form-close-btn" class="close-btn" (click)="onCancel()" type="button" aria-label="Close">
         <span class="material-symbols-outlined">close</span>
       </button>
     </div>
 
-    <div class="modal-body">
-      <div *ngIf="errorMessage" class="alert alert-error">
+    <div id="vendor-form-body" class="modal-body">
+      <div id="vendor-form-error-alert" *ngIf="errorMessage" class="alert alert-error">
         <span class="material-symbols-outlined">error</span>
         <span>{{ errorMessage }}</span>
       </div>
 
-      <form (ngSubmit)="onSubmit()">
+      <form id="vendor-form" (ngSubmit)="onSubmit()">
         <div class="form-group">
-          <label for="name">Vendor Name *</label>
-          <input id="name" type="text" [(ngModel)]="name" name="name" placeholder="e.g., Pizza Palace" required />
-          <span *ngIf="!name" class="error-text">Vendor name is required</span>
+          <label for="vendor-name-input">Vendor Name *</label>
+          <input id="vendor-name-input" type="text" [(ngModel)]="name" name="name" placeholder="e.g., Pizza Palace" required />
+          <span id="vendor-name-error" *ngIf="!name" class="error-text">Vendor name is required</span>
         </div>
 
         <div class="form-group">
-          <label for="email">Email *</label>
-          <input id="email" type="email" [(ngModel)]="email" name="email" placeholder="vendor@example.com" required />
-          <span *ngIf="!email || !isValidEmail(email)" class="error-text">Valid email is required</span>
+          <label for="vendor-email-input">Email *</label>
+          <input id="vendor-email-input" type="email" [(ngModel)]="email" name="email" placeholder="vendor@example.com" required />
+          <span id="vendor-email-error" *ngIf="!email || !isValidEmail(email)" class="error-text">Valid email is required</span>
         </div>
 
         <div class="form-group">
-          <label for="phone">Phone (Optional)</label>
-          <input id="phone" type="tel" [(ngModel)]="phone" name="phone" placeholder="+1 (555) 000-0000" />
+          <label for="vendor-phone-input">Phone (Optional)</label>
+          <input id="vendor-phone-input" type="tel" [(ngModel)]="phone" name="phone" placeholder="+1 (555) 000-0000" />
         </div>
 
         <div class="form-group">
-          <label for="contactPerson">Contact Person (Optional)</label>
-          <input id="contactPerson" type="text" [(ngModel)]="contactPerson" name="contactPerson" placeholder="e.g., John Smith" />
+          <label for="vendor-contact-person-input">Contact Person (Optional)</label>
+          <input id="vendor-contact-person-input" type="text" [(ngModel)]="contactPerson" name="contactPerson" placeholder="e.g., John Smith" />
         </div>
 
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancel</button>
-          <button type="submit" class="btn btn-primary" [disabled]="!isFormValid() || isSaving">
+        <div id="vendor-form-footer" class="modal-footer">
+          <button id="vendor-form-cancel-btn" type="button" class="btn btn-secondary" (click)="onCancel()">Cancel</button>
+          <button id="vendor-form-submit-btn" type="submit" class="btn btn-primary" [disabled]="!isFormValid() || isSaving">
             {{ isSaving ? 'Saving...' : 'Save Vendor' }}
           </button>
         </div>
