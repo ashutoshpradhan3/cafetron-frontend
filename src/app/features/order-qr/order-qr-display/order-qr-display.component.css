@@ -19,6 +19,7 @@
   background: rgba(255, 255, 255, 0.95);
   box-shadow: var(--shadow-md);
   animation: fadeUp 360ms ease both;
+  text-align: center;
 }
 
 .qr-header {
@@ -67,8 +68,10 @@
   display: grid;
   place-items: center;
   aspect-ratio: 1;
+  width: min(280px, 100%);
   min-width: 0;
   max-width: 280px;
+  margin-inline: auto;
   padding: 22px;
   border: 1px dashed rgba(157, 67, 0, 0.32);
   border-radius: var(--radius);
