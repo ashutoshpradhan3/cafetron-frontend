@@ -1,15 +1,16 @@
-<main class="dashboard">
-  <header class="page-header">
+<main id="admin-dashboard-page" class="dashboard">
+  <header id="admin-dashboard-header" class="page-header">
     <div>
       <p class="eyebrow">Admin</p>
       <h1 class="page-title">Dashboard</h1>
       <p class="page-sub">Daily order health, revenue movement, and vendor performance.</p>
     </div>
     <div class="header-controls">
-      <a class="export-btn" routerLink="/admin/vendors">Manage Vendors</a>
-      <div class="date-group">
+      <a id="admin-dashboard-manage-vendors-link" class="export-btn" routerLink="/admin/vendors">Manage Vendors</a>
+      <div id="admin-dashboard-date-group" class="date-group">
         <label class="ctrl-label">Date</label>
         <input
+          id="admin-dashboard-date-input"
           type="date"
           [(ngModel)]="selectedDate"
           (ngModelChange)="onDateChange()"
@@ -24,7 +25,7 @@
     </svg>
   </header>
 
-  <section class="skeleton-wrapper" *ngIf="loading">
+  <section id="admin-dashboard-loading-skeleton" class="skeleton-wrapper" *ngIf="loading">
     <div class="skeleton-row">
       <div class="skeleton kpi"></div>
       <div class="skeleton kpi"></div>
@@ -39,38 +40,38 @@
   </section>
 
   <ng-container *ngIf="!loading">
-    <section class="kpi-row" *ngIf="summary">
-      <article class="kpi-card">
+    <section id="admin-dashboard-kpi-row" class="kpi-row" *ngIf="summary">
+      <article id="admin-dashboard-total-orders-kpi" class="kpi-card">
         <span class="kpi-icon material-symbols-outlined">receipt_long</span>
         <div>
           <p class="kpi-label">Total Orders</p>
-          <p class="kpi-value">{{ summary.orderCount }}</p>
+          <p id="admin-dashboard-total-orders-value" class="kpi-value">{{ summary.orderCount }}</p>
         </div>
       </article>
-      <article class="kpi-card highlight">
+      <article id="admin-dashboard-revenue-kpi" class="kpi-card highlight">
         <span class="kpi-icon material-symbols-outlined">payments</span>
         <div>
           <p class="kpi-label">Revenue</p>
-          <p class="kpi-value">Rs {{ summary.revenue | number:'1.0-0' }}</p>
+          <p id="admin-dashboard-revenue-value" class="kpi-value">Rs {{ summary.revenue | number:'1.0-0' }}</p>
         </div>
       </article>
-      <article class="kpi-card">
+      <article id="admin-dashboard-items-sold-kpi" class="kpi-card">
         <span class="kpi-icon material-symbols-outlined">restaurant_menu</span>
         <div>
           <p class="kpi-label">Items Sold</p>
-          <p class="kpi-value">{{ summary.itemsSold }}</p>
+          <p id="admin-dashboard-items-sold-value" class="kpi-value">{{ summary.itemsSold }}</p>
         </div>
       </article>
-      <article class="kpi-card" [class.warn]="vendorDeclines.length > 0">
+      <article id="admin-dashboard-vendor-declines-kpi" class="kpi-card" [class.warn]="vendorDeclines.length > 0">
         <span class="kpi-icon material-symbols-outlined">warning</span>
         <div>
           <p class="kpi-label">Vendor Declines</p>
-          <p class="kpi-value">{{ vendorDeclines.length }}</p>
+          <p id="admin-dashboard-vendor-declines-value" class="kpi-value">{{ vendorDeclines.length }}</p>
         </div>
       </article>
     </section>
 
-    <section class="chart-card full-width">
+    <section id="admin-dashboard-revenue-card" class="chart-card full-width">
       <div class="chart-card-header">
         <div>
           <h2 class="chart-title">Revenue Trend</h2>
@@ -78,42 +79,44 @@
         </div>
         <div class="range-controls">
           <input
+            id="admin-dashboard-range-from-input"
             type="date"
             [(ngModel)]="rangeFrom"
             (ngModelChange)="onRangeChange()"
             [max]="rangeTo"
             class="date-input sm"
           />
-          <span class="range-sep">to</span>
+          <span id="admin-dashboard-range-separator" class="range-sep">to</span>
           <input
+            id="admin-dashboard-range-to-input"
             type="date"
             [(ngModel)]="rangeTo"
             (ngModelChange)="onRangeChange()"
             [max]="today"
             class="date-input sm"
           />
-          <button class="export-btn" (click)="downloadRange()">CSV</button>
+          <button id="admin-dashboard-range-csv-btn" class="export-btn" (click)="downloadRange()">CSV</button>
         </div>
       </div>
-      <div class="chart-body tall" *ngIf="revenueChart.labels?.length; else noRevenue">
-        <canvas baseChart [data]="revenueChart" [options]="lineOptions" type="line"></canvas>
+      <div id="admin-dashboard-revenue-chart-body" class="chart-body tall" *ngIf="revenueChart.labels?.length; else noRevenue">
+        <canvas id="admin-dashboard-revenue-chart" baseChart [data]="revenueChart" [options]="lineOptions" type="line"></canvas>
       </div>
       <ng-template #noRevenue>
-        <div class="empty-chart">No revenue data for this range</div>
+        <div id="admin-dashboard-no-revenue-state" class="empty-chart">No revenue data for this range</div>
       </ng-template>
     </section>
 
-    <section class="section-card">
+    <section id="admin-dashboard-top-items-card" class="section-card">
       <div class="section-header">
         <div>
           <h2 class="chart-title">Top Items</h2>
           <p class="chart-sub">By quantity sold, all time</p>
         </div>
-        <button class="export-btn" (click)="downloadTopItems()">CSV</button>
+        <button id="admin-dashboard-top-items-csv-btn" class="export-btn" (click)="downloadTopItems()">CSV</button>
       </div>
-      <div class="section-body" *ngIf="topItems.length > 0; else noItems">
-        <div class="section-chart">
-          <canvas baseChart [data]="topItemsChart" [options]="barOptions" type="bar"></canvas>
+      <div id="admin-dashboard-top-items-body" class="section-body" *ngIf="topItems.length > 0; else noItems">
+        <div id="admin-dashboard-top-items-chart-body" class="section-chart">
+          <canvas id="admin-dashboard-top-items-chart" baseChart [data]="topItemsChart" [options]="barOptions" type="bar"></canvas>
         </div>
         <div class="section-table">
           <table class="data-table">
@@ -121,31 +124,31 @@
               <tr><th>#</th><th>Item</th><th>Qty Sold</th></tr>
             </thead>
             <tbody>
-              <tr *ngFor="let item of topItems; let i = index">
-                <td class="rank">{{ i + 1 }}</td>
-                <td>{{ item.name }}</td>
-                <td class="count-cell">{{ item.qtySold }}</td>
+              <tr *ngFor="let item of topItems; let i = index" id="admin-dashboard-top-item-row-{{ i + 1 }}">
+                <td id="admin-dashboard-top-item-rank-{{ i + 1 }}" class="rank">{{ i + 1 }}</td>
+                <td id="admin-dashboard-top-item-name-{{ i + 1 }}">{{ item.name }}</td>
+                <td id="admin-dashboard-top-item-qty-{{ i + 1 }}" class="count-cell">{{ item.qtySold }}</td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
       <ng-template #noItems>
-        <div class="empty-chart">No item data available</div>
+        <div id="admin-dashboard-no-items-state" class="empty-chart">No item data available</div>
       </ng-template>
     </section>
 
-    <section class="section-card">
+    <section id="admin-dashboard-status-card" class="section-card">
       <div class="section-header">
         <div>
           <h2 class="chart-title">Order Status Breakdown</h2>
           <p class="chart-sub">Breakdown for {{ selectedDate }}</p>
         </div>
-        <button class="export-btn" (click)="downloadDaily()">Daily CSV</button>
+        <button id="admin-dashboard-daily-csv-btn" class="export-btn" (click)="downloadDaily()">Daily CSV</button>
       </div>
-      <div class="section-body" *ngIf="statusBreakdown.length > 0; else noStatus">
-        <div class="section-chart doughnut">
-          <canvas baseChart [data]="statusChart" [options]="doughnutOptions" type="doughnut"></canvas>
+      <div id="admin-dashboard-status-body" class="section-body" *ngIf="statusBreakdown.length > 0; else noStatus">
+        <div id="admin-dashboard-status-chart-body" class="section-chart doughnut">
+          <canvas id="admin-dashboard-status-chart" baseChart [data]="statusChart" [options]="doughnutOptions" type="doughnut"></canvas>
         </div>
         <div class="section-table">
           <table class="data-table">
@@ -153,30 +156,30 @@
               <tr><th>Status</th><th>Orders</th></tr>
             </thead>
             <tbody>
-              <tr *ngFor="let s of statusBreakdown">
+              <tr *ngFor="let s of statusBreakdown; let i = index" id="admin-dashboard-status-row-{{ i + 1 }}">
                 <td>
-                  <span class="status-badge" [ngClass]="getStatusClass(s.status)">
+                  <span id="admin-dashboard-status-name-{{ i + 1 }}" class="status-badge" [ngClass]="getStatusClass(s.status)">
                     {{ s.status.replace('_', ' ') }}
                   </span>
                 </td>
-                <td class="count-cell">{{ s.count }}</td>
+                <td id="admin-dashboard-status-count-{{ i + 1 }}" class="count-cell">{{ s.count }}</td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
       <ng-template #noStatus>
-        <div class="empty-chart">No orders on this date</div>
+        <div id="admin-dashboard-no-status-state" class="empty-chart">No orders on this date</div>
       </ng-template>
     </section>
 
-    <section class="section-card" *ngIf="vendorDeclines.length > 0">
+    <section id="admin-dashboard-vendor-declines-card" class="section-card" *ngIf="vendorDeclines.length > 0">
       <div class="section-header">
         <div>
           <h2 class="chart-title">Vendor Declines</h2>
           <p class="chart-sub">Orders declined by vendors on {{ selectedDate }}</p>
         </div>
-        <button class="export-btn" (click)="downloadDeclines()">CSV</button>
+        <button id="admin-dashboard-declines-csv-btn" class="export-btn" (click)="downloadDeclines()">CSV</button>
       </div>
       <div class="section-body single">
         <div class="section-table">
@@ -185,10 +188,10 @@
               <tr><th>Vendor</th><th>Declines</th><th>Total Refunded</th></tr>
             </thead>
             <tbody>
-              <tr *ngFor="let v of vendorDeclines">
-                <td>{{ v.vendorName }}</td>
-                <td><span class="decline-badge">{{ v.declineCount }}</span></td>
-                <td class="amount-cell">Rs {{ v.totalRefunded | number:'1.0-0' }}</td>
+              <tr *ngFor="let v of vendorDeclines; let i = index" id="admin-dashboard-decline-row-{{ i + 1 }}">
+                <td id="admin-dashboard-decline-vendor-{{ i + 1 }}">{{ v.vendorName }}</td>
+                <td><span id="admin-dashboard-decline-count-{{ i + 1 }}" class="decline-badge">{{ v.declineCount }}</span></td>
+                <td id="admin-dashboard-decline-refunded-{{ i + 1 }}" class="amount-cell">Rs {{ v.totalRefunded | number:'1.0-0' }}</td>
               </tr>
             </tbody>
           </table>

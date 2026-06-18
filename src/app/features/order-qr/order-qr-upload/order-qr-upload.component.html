@@ -1,29 +1,30 @@
-<section class="upload-page">
-  <form #uploadForm="ngForm" (ngSubmit)="onUpload()" class="upload-card">
-    <header class="upload-header">
+<section id="qr-upload-page" class="upload-page">
+  <form id="qr-upload-form" #uploadForm="ngForm" (ngSubmit)="onUpload()" class="upload-card">
+    <header id="qr-upload-header" class="upload-header">
       <p class="eyebrow">QR Upload</p>
       <h1>Validate from image</h1>
       <p>Upload a saved QR image when camera scanning is not available.</p>
     </header>
 
-    <label class="file-drop">
+    <label id="qr-upload-file-drop" class="file-drop">
       <input
+        id="qr-upload-file-input"
         type="file"
         accept="image/png"
         (change)="onFileSelected($event)"
         required
       />
       <span class="file-mark material-symbols-outlined">upload_file</span>
-      <strong>{{ selectedFile ? selectedFile.name : 'Choose QR image' }}</strong>
+      <strong id="qr-upload-selected-file-name">{{ selectedFile ? selectedFile.name : 'Choose QR image' }}</strong>
       <small>PNG files only</small>
     </label>
 
-    <button class="btn btn-primary" type="submit" [disabled]="!selectedFile || isUploading">
+    <button id="qr-upload-submit-btn" class="btn btn-primary" type="submit" [disabled]="!selectedFile || isUploading">
       <span class="material-symbols-outlined">{{ isUploading ? 'sync' : 'cloud_upload' }}</span>
       {{ isUploading ? 'Uploading...' : 'Upload QR' }}
     </button>
 
-    <p class="result" *ngIf="successMessage">{{ successMessage }}</p>
-    <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+    <p id="qr-upload-success-message" class="result" *ngIf="successMessage">{{ successMessage }}</p>
+    <p id="qr-upload-error-message" class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
   </form>
 </section>

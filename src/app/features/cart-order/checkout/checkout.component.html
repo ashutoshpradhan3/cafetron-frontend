@@ -1,12 +1,12 @@
 <main class="checkout-page">
   <header class="app-topbar">
     <div class="topbar-left">
-      <button class="icon-btn" routerLink="/cart" type="button" aria-label="Back">
+      <button id="checkout-back-to-cart-btn" class="icon-btn" routerLink="/cart" type="button" aria-label="Back">
         <span class="material-symbols-outlined">arrow_back</span>
       </button>
       <h1>Checkout</h1>
     </div>
-    <div class="wallet-pill">
+    <div id="checkout-wallet-pill" class="wallet-pill">
       <span class="material-symbols-outlined">account_balance_wallet</span>
       <span>{{ getWalletLabel() }}</span>
     </div>
@@ -19,8 +19,9 @@
         <h2>{{ checkoutView === 'cards' ? checkoutSteps[activeStep].label : 'Everything at once' }}</h2>
       </div>
 
-      <div class="view-toggle" role="group" aria-label="Checkout view">
+      <div id="checkout-view-toggle" class="view-toggle" role="group" aria-label="Checkout view">
         <button
+          id="checkout-cards-view-btn"
           [class.active]="checkoutView === 'cards'"
           (click)="setCheckoutView('cards')"
           type="button"
@@ -29,6 +30,7 @@
           Cards
         </button>
         <button
+          id="checkout-overview-view-btn"
           [class.active]="checkoutView === 'overview'"
           (click)="setCheckoutView('overview')"
           type="button"
@@ -39,13 +41,14 @@
       </div>
     </div>
 
-    <div *ngIf="errorMessage" class="alert alert-error">
+    <div id="checkout-error-alert" *ngIf="errorMessage" class="alert alert-error">
       <span class="material-symbols-outlined">error</span>
       <span>{{ errorMessage }}</span>
     </div>
 
     <div
       *ngIf="toastMessage"
+      id="checkout-toast"
       class="checkout-toast"
       [class.toast-error]="toastType === 'error'"
       [class.toast-success]="toastType === 'success'"
@@ -59,6 +62,7 @@
     <div class="step-tabs" *ngIf="checkoutView === 'cards'">
       <button
         *ngFor="let step of checkoutSteps; let i = index"
+        id="checkout-step-tab-{{ i + 1 }}"
         [class.active]="activeStep === i"
         [class.done]="activeStep > i"
         (click)="goToStep(i)"
@@ -70,10 +74,10 @@
     </div>
 
     <section *ngIf="checkoutView === 'cards'" class="card-stage">
-      <article class="stack-card shadow-card shadow-card-third"></article>
-      <article class="stack-card shadow-card shadow-card-second"></article>
+      <article id="checkout-stack-card-third" class="stack-card shadow-card shadow-card-third"></article>
+      <article id="checkout-stack-card-second" class="stack-card shadow-card shadow-card-second"></article>
 
-      <article class="stack-card active-card" [ngSwitch]="activeStep">
+      <article id="checkout-active-card" class="stack-card active-card" [ngSwitch]="activeStep">
         <ng-container *ngSwitchCase="0">
           <div class="card-title-row">
             <span class="material-symbols-outlined">schedule</span>
@@ -86,7 +90,8 @@
 
           <div class="slot-grid">
             <button
-              *ngFor="let slot of pickupSlots"
+              *ngFor="let slot of pickupSlots; let i = index"
+              id="checkout-card-pickup-slot-{{ i + 1 }}"
               class="time-slot"
               [class.selected]="selectedPickupSlot === slot"
               (click)="selectedPickupSlot = slot"
@@ -110,21 +115,21 @@
           <div *ngIf="cartItems.length === 0" class="empty-message">
             <span class="material-symbols-outlined">shopping_cart_off</span>
             <strong>Your cart is empty.</strong>
-            <a routerLink="/menu">Continue shopping</a>
+            <a id="checkout-card-continue-shopping-link" routerLink="/menu">Continue shopping</a>
           </div>
 
           <div *ngIf="cartItems.length > 0" class="food-preview-list">
-            <article *ngFor="let item of cartItems" class="food-preview-card">
-              <div class="item-image">
+            <article *ngFor="let item of cartItems; let i = index" id="checkout-card-cart-item-{{ i + 1 }}" class="food-preview-card">
+              <div id="checkout-card-cart-item-image-{{ i + 1 }}" class="item-image">
                 <span>{{ getCartInitial(item) }}</span>
               </div>
               <div class="item-copy">
-                <h4>{{ item.itemName }}</h4>
-                <p>{{ item.vendorName || item.foodType || 'Cafetron menu item' }}</p>
+                <h4 id="checkout-card-cart-item-name-{{ i + 1 }}">{{ item.itemName }}</h4>
+                <p id="checkout-card-cart-item-vendor-{{ i + 1 }}">{{ item.vendorName || item.foodType || 'Cafetron menu item' }}</p>
               </div>
-              <div class="preview-meta">
-                <span>Qty {{ item.quantity }}</span>
-                <strong>${{ getLineTotal(item) | number: '1.2-2' }}</strong>
+              <div id="checkout-card-cart-item-meta-{{ i + 1 }}" class="preview-meta">
+                <span id="checkout-card-cart-item-qty-{{ i + 1 }}">Qty {{ item.quantity }}</span>
+                <strong id="checkout-card-cart-item-total-{{ i + 1 }}">${{ getLineTotal(item) | number: '1.2-2' }}</strong>
               </div>
             </article>
           </div>
@@ -141,16 +146,16 @@
 
           <section class="payment-card embedded-payment">
             <div class="wallet-option">
-              <div class="wallet-icon">
+              <div id="checkout-card-wallet-icon" class="wallet-icon">
                 <span class="material-symbols-outlined">account_balance_wallet</span>
               </div>
               <div>
-                <strong>Cafetron Wallet</strong>
-                <span>Balance: {{ getWalletLabel() }}</span>
+                <strong id="checkout-card-wallet-name">Cafetron Wallet</strong>
+                <span id="checkout-card-wallet-balance">Balance: {{ getWalletLabel() }}</span>
               </div>
               <span class="material-symbols-outlined check">check_circle</span>
             </div>
-            <button class="outline-btn" type="button">Add Payment Method</button>
+            <button id="checkout-card-add-payment-method-btn" class="outline-btn" type="button">Add Payment Method</button>
           </section>
         </ng-container>
 
@@ -166,19 +171,20 @@
           <section class="totals-card embedded-totals">
             <div class="total-row">
               <span>Subtotal</span>
-              <span>${{ totalAmount | number: '1.2-2' }}</span>
+              <span id="checkout-card-subtotal">${{ totalAmount | number: '1.2-2' }}</span>
             </div>
             <div class="total-row">
               <span>Tax</span>
-              <span>$0.00</span>
+              <span id="checkout-card-tax">$0.00</span>
             </div>
             <div class="total-row grand">
               <span>Total</span>
-              <strong>${{ totalAmount | number: '1.2-2' }}</strong>
+              <strong id="checkout-card-total">${{ totalAmount | number: '1.2-2' }}</strong>
             </div>
           </section>
 
           <button
+            id="checkout-card-place-order-btn"
             class="place-btn"
             (click)="onPlaceOrder()"
             [disabled]="isLoading || cartItems.length === 0"
@@ -192,6 +198,7 @@
 
         <div class="card-actions">
           <button
+            id="checkout-card-back-step-btn"
             class="nav-btn secondary"
             (click)="previousStep()"
             [disabled]="activeStep === 0"
@@ -202,6 +209,7 @@
           </button>
           <button
             *ngIf="activeStep < checkoutSteps.length - 1"
+            id="checkout-card-next-step-btn"
             class="nav-btn primary"
             (click)="nextStep()"
             type="button"
@@ -214,7 +222,7 @@
     </section>
 
     <section *ngIf="checkoutView === 'overview'" class="overview-grid">
-      <article class="overview-card">
+      <article id="checkout-overview-slot-card" class="overview-card">
         <div class="card-title-row">
           <span class="material-symbols-outlined">schedule</span>
           <div>
@@ -224,7 +232,8 @@
         </div>
         <div class="slot-grid compact">
           <button
-            *ngFor="let slot of pickupSlots"
+            *ngFor="let slot of pickupSlots; let i = index"
+            id="checkout-overview-pickup-slot-{{ i + 1 }}"
             class="time-slot"
             [class.selected]="selectedPickupSlot === slot"
             (click)="selectedPickupSlot = slot"
@@ -236,7 +245,7 @@
         </div>
       </article>
 
-      <article class="overview-card">
+      <article id="checkout-overview-food-card" class="overview-card">
         <div class="card-title-row">
           <span class="material-symbols-outlined">restaurant</span>
           <div>
@@ -246,26 +255,26 @@
         </div>
         <div *ngIf="cartItems.length === 0" class="empty-message mini">
           <strong>Your cart is empty.</strong>
-          <a routerLink="/menu">Continue shopping</a>
+          <a id="checkout-overview-continue-shopping-link" routerLink="/menu">Continue shopping</a>
         </div>
         <div *ngIf="cartItems.length > 0" class="food-preview-list compact-list">
-          <article *ngFor="let item of cartItems" class="food-preview-card">
-            <div class="item-image">
+          <article *ngFor="let item of cartItems; let i = index" id="checkout-overview-cart-item-{{ i + 1 }}" class="food-preview-card">
+            <div id="checkout-overview-cart-item-image-{{ i + 1 }}" class="item-image">
               <span>{{ getCartInitial(item) }}</span>
             </div>
             <div class="item-copy">
-              <h4>{{ item.itemName }}</h4>
-              <p>{{ item.vendorName || item.foodType || 'Cafetron menu item' }}</p>
+              <h4 id="checkout-overview-cart-item-name-{{ i + 1 }}">{{ item.itemName }}</h4>
+              <p id="checkout-overview-cart-item-vendor-{{ i + 1 }}">{{ item.vendorName || item.foodType || 'Cafetron menu item' }}</p>
             </div>
-            <div class="preview-meta">
-              <span>Qty {{ item.quantity }}</span>
-              <strong>${{ getLineTotal(item) | number: '1.2-2' }}</strong>
+            <div id="checkout-overview-cart-item-meta-{{ i + 1 }}" class="preview-meta">
+              <span id="checkout-overview-cart-item-qty-{{ i + 1 }}">Qty {{ item.quantity }}</span>
+              <strong id="checkout-overview-cart-item-total-{{ i + 1 }}">${{ getLineTotal(item) | number: '1.2-2' }}</strong>
             </div>
           </article>
         </div>
       </article>
 
-      <article class="overview-card payment-card">
+      <article id="checkout-overview-payment-card" class="overview-card payment-card">
         <div class="card-title-row light">
           <span class="material-symbols-outlined">payments</span>
           <div>
@@ -274,19 +283,19 @@
           </div>
         </div>
         <div class="wallet-option">
-          <div class="wallet-icon">
+          <div id="checkout-overview-wallet-icon" class="wallet-icon">
             <span class="material-symbols-outlined">account_balance_wallet</span>
           </div>
           <div>
-            <strong>Cafetron Wallet</strong>
-            <span>Balance: {{ getWalletLabel() }}</span>
+            <strong id="checkout-overview-wallet-name">Cafetron Wallet</strong>
+            <span id="checkout-overview-wallet-balance">Balance: {{ getWalletLabel() }}</span>
           </div>
           <span class="material-symbols-outlined check">check_circle</span>
         </div>
-        <button class="outline-btn" type="button">Add Payment Method</button>
+        <button id="checkout-overview-add-payment-method-btn" class="outline-btn" type="button">Add Payment Method</button>
       </article>
 
-      <article class="overview-card">
+      <article id="checkout-overview-place-order-card" class="overview-card">
         <div class="card-title-row">
           <span class="material-symbols-outlined">receipt_long</span>
           <div>
@@ -297,18 +306,19 @@
         <section class="totals-card embedded-totals">
           <div class="total-row">
             <span>Subtotal</span>
-            <span>${{ totalAmount | number: '1.2-2' }}</span>
+            <span id="checkout-overview-subtotal">${{ totalAmount | number: '1.2-2' }}</span>
           </div>
           <div class="total-row">
             <span>Tax</span>
-            <span>$0.00</span>
+            <span id="checkout-overview-tax">$0.00</span>
           </div>
           <div class="total-row grand">
             <span>Total</span>
-            <strong>${{ totalAmount | number: '1.2-2' }}</strong>
+            <strong id="checkout-overview-total">${{ totalAmount | number: '1.2-2' }}</strong>
           </div>
         </section>
         <button
+          id="checkout-overview-place-order-btn"
           class="place-btn"
           (click)="onPlaceOrder()"
           [disabled]="isLoading || cartItems.length === 0"
