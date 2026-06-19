@@ -38,7 +38,14 @@
           </div>
           <div>
             <dt>Order Date</dt>
-            <dd id="order-detail-created-at">{{ order.createdAt | date: 'medium' }}</dd>
+            <dd id="order-detail-created-at">
+              {{ order.createdAt | date: 'medium' }}
+              <span *ngIf="order.pickupTimeZone">({{ order.pickupTimeZone }})</span>
+            </dd>
+          </div>
+          <div *ngIf="order.pickupTimeZone">
+            <dt>Timezone</dt>
+            <dd id="order-detail-timezone">{{ order.pickupTimeZone }}</dd>
           </div>
           <div>
             <dt>Payment</dt>
