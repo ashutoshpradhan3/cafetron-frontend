@@ -310,6 +310,38 @@ h4 {
   line-height: 1.5;
 }
 
+.timezone-control {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+}
+
+.timezone-control label {
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.timezone-control select {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid rgba(255, 255, 255, 0.58);
+  border-radius: 10px;
+  background: rgba(34, 42, 52, 0.92);
+  color: #fff;
+  font-weight: 800;
+  color-scheme: dark;
+}
+
+.timezone-control select:focus {
+  border-color: var(--primary-action);
+  box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.16);
+  outline: none;
+}
+
 .active-card .eyebrow,
 .overview-card .eyebrow {
   color: rgba(255, 255, 255, 0.78);

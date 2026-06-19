@@ -89,6 +89,19 @@
           </div>
           <p class="card-copy">Choose when your food should be fresh and ready for pickup.</p>
 
+          <div class="timezone-control">
+            <label for="checkout-card-timezone-select">Timezone</label>
+            <select
+              id="checkout-card-timezone-select"
+              [(ngModel)]="selectedTimeZone"
+              (ngModelChange)="onTimeZoneChange($event)"
+            >
+              <option *ngFor="let timeZone of timeZoneOptions" [value]="timeZone">
+                {{ getTimeZoneLabel(timeZone) }}
+              </option>
+            </select>
+          </div>
+
           <div class="slot-grid">
             <button
               *ngFor="let slot of pickupSlots; let i = index"
@@ -98,8 +111,8 @@
               (click)="selectedPickupSlot = slot"
               type="button"
             >
-              <strong>{{ slot }}</strong>
-              <span>{{ slot === pickupSlots[0] ? 'Fastest' : 'Available' }}</span>
+              <strong>{{ getPickupSlotLabel(slot) }}</strong>
+              <span>{{ getPickupSlotCaption(slot) }}</span>
             </button>
           </div>
         </ng-container>
@@ -232,6 +245,18 @@
             <h3>Select time slot</h3>
           </div>
         </div>
+        <div class="timezone-control compact">
+          <label for="checkout-overview-timezone-select">Timezone</label>
+          <select
+            id="checkout-overview-timezone-select"
+            [(ngModel)]="selectedTimeZone"
+            (ngModelChange)="onTimeZoneChange($event)"
+          >
+            <option *ngFor="let timeZone of timeZoneOptions" [value]="timeZone">
+              {{ getTimeZoneLabel(timeZone) }}
+            </option>
+          </select>
+        </div>
         <div class="slot-grid compact">
           <button
             *ngFor="let slot of pickupSlots; let i = index"
@@ -241,8 +266,8 @@
             (click)="selectedPickupSlot = slot"
             type="button"
           >
-            <strong>{{ slot }}</strong>
-            <span>{{ slot === pickupSlots[0] ? 'Fastest' : 'Available' }}</span>
+            <strong>{{ getPickupSlotLabel(slot) }}</strong>
+            <span>{{ getPickupSlotCaption(slot) }}</span>
           </button>
         </div>
       </article>
