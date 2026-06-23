@@ -126,6 +126,7 @@ export const routes: Routes = [
   {
     path: 'login',
     title: 'Login',
+    data: { hideFooter: true },
     loadComponent: () =>
       import('./features/auth/login/login')
         .then(m => m.LoginComponent),
@@ -133,6 +134,7 @@ export const routes: Routes = [
   {
     path: 'register',
     title: 'Register',
+    data: { hideFooter: true },
     loadComponent: () =>
       import('./features/auth/register/register')
         .then(m => m.RegisterComponent),
@@ -173,7 +175,7 @@ export const routes: Routes = [
     path: 'checkout',
     title: 'Checkout',
     canActivate: [authGuard, roleGuard],
-    data: { roles: EMPLOYEE_ORDER_ROLES },
+    data: { roles: EMPLOYEE_ORDER_ROLES, hideFooter: true },
     component: CheckoutComponent,
   },
   {
@@ -187,7 +189,7 @@ export const routes: Routes = [
     path: 'orders/:orderId',
     title: 'Order Detail',
     canActivate: [authGuard, roleGuard],
-    data: { roles: EMPLOYEE_ORDER_ROLES },
+    data: { roles: EMPLOYEE_ORDER_ROLES, hideFooter: true },
     component: OrderDetailComponent,
   },
   {
@@ -201,28 +203,28 @@ export const routes: Routes = [
     path: 'pickup',
     title: 'Scan Pickup QR',
     canActivate: [authGuard, roleGuard],
-    data: { roles: VENDOR_STAFF_ROLES },
+    data: { roles: VENDOR_STAFF_ROLES, hideFooter: true },
     component: OrderQrScannerComponent,
   },
   {
     path: 'pickup/scan',
     title: 'Scan Pickup QR',
     canActivate: [authGuard, roleGuard],
-    data: { roles: VENDOR_STAFF_ROLES },
+    data: { roles: VENDOR_STAFF_ROLES, hideFooter: true },
     component: OrderQrScannerComponent,
   },
   {
     path: 'pickup/upload',
     title: 'Upload Pickup QR',
     canActivate: [authGuard, roleGuard],
-    data: { roles: VENDOR_STAFF_ROLES },
+    data: { roles: VENDOR_STAFF_ROLES, hideFooter: true },
     component: OrderQRUploadComponent,
   },
   {
     path: 'pickup/qr/:orderId',
     title: 'Pickup QR',
     canActivate: [authGuard, roleGuard],
-    data: { roles: EMPLOYEE_ORDER_ROLES },
+    data: { roles: EMPLOYEE_ORDER_ROLES, hideFooter: true },
     component: OrderQRDisplayComponent,
   },
   {
@@ -242,7 +244,7 @@ export const routes: Routes = [
     path: 'vendor/scanner',
     title: 'Vendor Scanner',
     canActivate: [authGuard, roleGuard],
-    data: { roles: VENDOR_STAFF_ROLES },
+    data: { roles: VENDOR_STAFF_ROLES, hideFooter: true },
     component: OrderQrScannerComponent,
   },
   featureRoute({

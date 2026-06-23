@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 
@@ -130,6 +130,7 @@ export class BottomNavComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly router: Router,
+    private readonly route: ActivatedRoute,
     private readonly authService: AuthService,
     private readonly cdr: ChangeDetectorRef
   ) {}
@@ -153,11 +154,27 @@ export class BottomNavComponent implements OnInit, OnDestroy {
   }
 
   private refreshState(url: string): void {
+    if (this.shouldHideFooter()) {
+      this.navItems = [];
+      this.isVisible = false;
+      this.cdr.markForCheck();
+      return;
+    }
+
     this.navItems = this.authService.isLoggedIn()
       ? this.getNavItemsForRole()
       : this.getPublicNavItems(url);
     this.isVisible = this.navItems.length > 0;
     this.cdr.markForCheck();
+  }
+
+  private shouldHideFooter(): boolean {
+    let activeRoute = this.route;
+    while (activeRoute.firstChild) {
+      activeRoute = activeRoute.firstChild;
+    }
+
+    return activeRoute.snapshot.data['hideFooter'] === true;
   }
 
   private getNavItemsForRole(): NavItem[] {
